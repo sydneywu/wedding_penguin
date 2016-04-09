@@ -17,11 +17,17 @@
 		<% include partials/header.ejs %>
 	
 		<div class="left-bar">
-			<form ng-submit="addGuests()">
+			<form ng-submit="addGuest()">
 				<h3>Add a new guest</h3>
 				<div class="form-group">
 				
 					<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guestName">
+					
+					<input type="text" class="form-control" placeholder="Relation" ng-model="guestRelation">
+
+					<select name='table' ng-model="guestTable">
+						<option ng-repeat="i in getNumber(totalTables) track by $index"> {{$index+1}}</option>
+					</select>
 				
 					<button type="submit" class="btn btn-primary">Save</button>
 				
