@@ -12,10 +12,10 @@
 
 </head>
 <body ng-app="WeddingPenguin">
-	<div class="container" ng-controller="GuestCtrl">
+	<div class="container" ng-controller="MainCtrl">
 	
 		<% include partials/header.ejs %>
-	
+		<ui-view></ui-view>
 		<div class="left-bar">
 			<form ng-submit="addGuest()">
 				<h3>Add a new guest</h3>
@@ -38,7 +38,7 @@
 		
 		<div class="right-bar">
 		
-			<div class="guest-list" ng-controller="GuestCtrl" ng-repeat="guest in guests">
+			<div class="guest-list" ng-controller="MainCtrl" ng-repeat="guest in guests">
 				<span>{{guest.name}}</span>
 				<span>{{guest.table}}</span>
 				<span>{{guest.relation}}</span>
@@ -48,11 +48,16 @@
 		</div>
 
 
-
-
-
-
 	</div><!--end container-->
+
+<script type="text/ng-template" id="/home.html">
+  <div class="page-header">
+    <h1>Flapper News</h1>
+  </div>
+
+  <!-- rest of template -->
+</script>
+
 
 </body>
 </html>
