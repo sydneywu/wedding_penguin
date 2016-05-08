@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
 require ('./models/Guests')
+require ('./models/Checklists')
 mongoose.connect('mongodb://localhost/wedding-penguin');
 
 var routes = require('./routes/index');
