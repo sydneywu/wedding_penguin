@@ -6,16 +6,37 @@ app.config([
 	function($stateProvider, $urlRouterProvider){
 
 		$stateProvider
-			.state('home', 
-				{url: '/home',
-				templateUrl: '/home.html',
-				controller: 'MainCtrl',
-				resolve:{								//ensure the getAll function will run first
-					guestPromise: ['guests', function(guests){
-						return guests.getAll();
-					}]
-				}
+			.state('home', {
+					url: '/home',					// use id to display individual records
+					templateUrl: '/home.html',
+					controller: 'MainCtrl',
+
 			})
+
+			.state('guests', {
+					url: '/guests',
+					templateUrl: '/guests.html',
+					controller: 'MainCtrl',
+					resolve:{								//ensure the getAll function will run first
+						guestsPromise: 
+							['guestsFactory', 
+							function(guests){ 
+								return guests.getAll();
+							}]
+					}
+			})
+
+			.state('guestDetails', {
+					url: '/guests/{id}',
+					templateUrl: '/guest_details.html',
+					controller: 'GuestCtrl',
+					resolve:{								//ensure the getAll function will run first
+						guestPromise: ['$stateParams', 'guestsFactory', function($stateParams, guests){
+							return guests.get($stateParams.id);
+						}]
+					}
+			})
+
 
 			.state('checklist', {
 				url: '/checklist',
@@ -28,15 +49,18 @@ app.config([
 				}
 			})
 
-		$urlRouterProvider.otherwise('home');
+
+		//$urlRouterProvider.otherwise('home');
 	
 	}
 ]);
 
-app.factory('guests',['$http', function($http){
+
+app.factory('guestsFactory',['$http', function($http){
 	var o = {
-		guests: []
+		guests: [], 
 	};
+
 	o.getAll = function(){
 		return $http.get('/guests').success(function(data){
 			angular.copy(data, o.guests);
@@ -51,45 +75,79 @@ app.factory('guests',['$http', function($http){
 
 	o.get = function(id){
 		return $http.get('/guests/'+id).then(function(res){
+			//angular.copy(data, o.guest);
 			return res.data;
 		})
 	}
 
-	return o;
-}])
-
-
-app.factory('checklists',['$http', function($http){
-	var o = {
-		checklists: []
+	o.change = function(guest){
+		return $http.put('/guests/' + guest._id + '/change')
+			.success(function(data){
+				guest.relation = 'num';
+			});
 	};
-	o.getAll = function(){
-		return $http.get('/checklist').success(function(data){
-			angular.copy(data, o.checklists);
-		})
+
+	o.update1= function(guest, data1){
+		return $http.put('/guests/' + guest._id, data1)
+			.success(function(data){
+				console.log('guest updated')
+			})
 	}
 
-	o.create = function(checklist){
-		return $http.post('/checklists', checklist).success(function(data){
-			o.checklist.push(data);
-		});
-	};
+	o.delete = function(guest){
+		return $http.delete('/guests/' + guest._id)
+			.success(function(data){
+				console.log('guest deleted')
+			})
+	}
 
 	return o;
 }])
 
-app.controller('MainCtrl',
-function($scope, guests, $uibModal){
+app.controller('GuestCtrl', [
+	'$scope',
+	'$stateParams',
+	'guestsFactory',
+	'guestPromise',
+	function($scope, $stateParams, guestsFactory, guestb){
+		
+		$scope.guest=guestPromise;
+
+		$scope.updateGuest = function(){
+			guestsFactory.update1($scope.guest, {
+				name: $scope.guest.name,
+				relation: $scope.guest.relation,
+				table: $scope.guest.table
+			})
+		}
+
+		$scope.deleteGuest = function(){
+			console.log ($scope.guest);
+			guestsFactory.delete($scope.guest);
+		}
+	}
+])
+
+app.controller('MainCtrl', [
+	'$scope',
+	'$stateParams',
+	'guestsFactory',
+	'$uibModal',
+	function($scope, $stateParams, guestsFactory, $uibModal){
 		
 		$scope.tableNo = [1,2,3,4,5];
+		$scope.totalTables=5;
+		$scope.getNumber=function(num){
+			return new Array(num);
+		}
 
-		$scope.items = [1,2,3,4,5,6];
-		$scope.guests = guests.guests;
-
+		$scope.guests = guestsFactory.guests;		//for all guests
+		
+		//$scope.test= $scope.guest;
 
 		$scope.addGuest = function(){
-			if(!$scope.guestName || $scope.guestName ===""){return;}
-			guests.create({
+			if(!$scope.guestName || $scope.guestName ===""){return;}	//error checking
+			guestsFactory.create({												
 				name: $scope.guestName,
 				relation: $scope.guestRelation,
 				table: $scope.guestTable,
@@ -99,12 +157,14 @@ function($scope, guests, $uibModal){
 			//$scope.table='';
 		}
 
-		$scope.totalTables = 5
-
-		$scope.getNumber=function(num){
-			return new Array(num);
+		$scope.changeGuest = function(guest){
+			guestsFactory.change(guest)
 		}
 
+
+
+
+		// modal window
 		$scope.open = function(){
 
 			var modalInstance = $uibModal.open({
@@ -125,53 +185,10 @@ function($scope, guests, $uibModal){
 
 		}
 
-})
-
-app.controller('TodoCtrl',
-function($scope, checklists){
-
-		$scope.checklists = checklists.checklists;
+}]);
 
 
-		$scope.addChecklist = function(){
-			if(!$scope.checklistName || $scope.checklistName ===""){return;}
-			guests.create({
-				name: $scope.guestName,
-				relation: $scope.guestRelation,
-				table: $scope.guestTable,
-			});
-			//$scope.name='';
-			//$scope.relation='';
-			//$scope.table='';
-		}
 
-		$scope.totalTables = 5
-
-		$scope.getNumber=function(num){
-			return new Array(num);
-		}
-
-		$scope.open = function(){
-
-			var modalInstance = $uibModal.open({
-			    templateUrl: 'myModalContent.html',
-			    controller: 'ModalInstanceCtrl',
-				resolve: {
-			    	tables: function () {
-			        	return $scope.items;
-		        	}
-  			    }
-			})
-
-		    modalInstance.result.then(function (selectedItem) {
-		      $scope.selected = selectedItem;
-		    }, function () {
-		      $log.info('Modal dismissed at: ' + new Date());
-		    });
-
-		}
-
-})
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, tables) {
 
