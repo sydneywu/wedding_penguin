@@ -12,6 +12,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script> <!-- Use angular filter for grouping ng-repeat -->
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-resource.min.js"></script><!--Use resource for crud operation-->
 	<script src="/public/javascripts/angularApp.js"></script>
+	<script src="/public/javascripts/GuestService.js"></script>
+	<script src="/public/javascripts/GuestCtrl.js"></script>
+	<script src="/public/javascripts/userService.js"></script>
+	<script src="/public/javascripts/userCtrl.js"></script>
+
+<!-- Views -->
+
 
 </head>
 <body ng-app="WeddingPenguin">
@@ -23,6 +30,95 @@
 
 
 	</div><!--end container-->
+
+
+
+<script type="text/ng-template" id="/home.html">
+	<div class="container">
+	    <h1>Welcome to Home page</h1>
+
+	</div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="/register.html">
+  <div class="page-header">
+    <h1>Flapper News</h1>
+  </div>
+
+  <div ng-show="error" class="alert alert-danger row">
+    <span>{{ error.message }}</span>
+  </div>
+
+  <form ng-submit="register()"
+    style="margin-top:30px;">
+    <h3>Register</h3>
+
+    <div class="form-group">
+      <input type="text"
+      class="form-control"
+      placeholder="Username"
+      ng-model="user.username"></input>
+    </div>
+    <div class="form-group">
+      <input type="password"
+      class="form-control"
+      placeholder="Password"
+      ng-model="user.password"></input>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</script>
+
+<script type="text/ng-template" id="/login.html">
+  <div class="page-header">
+    <h1>Flapper News</h1>
+  </div>
+
+  <div ng-show="error" class="alert alert-danger row">
+    <span>{{ error.message }}</span>
+  </div>
+
+  <form ng-submit="login()"
+    style="margin-top:30px;">
+    <h3>Log In</h3>
+
+    <div class="form-group">
+      <input type="text"
+      class="form-control"
+      placeholder="Username"
+      ng-model="user.username"></input>
+    </div>
+    <div class="form-group">
+      <input type="password"
+      class="form-control"
+      placeholder="Password"
+      ng-model="user.password"></input>
+    </div>
+    <button type="submit" class="btn btn-primary">Log In</button>
+  </form>
+  </script>
+
+<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Im a modal</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+</script>
 
 <script type="text/ng-template" id="/guests.html">
   <div class="page-header">
@@ -41,6 +137,9 @@
 					<select name='table' ng-model="guestTable">
 						<option ng-repeat="i in getNumber(totalTables) track by $index"> {{$index+1}}</option>
 					</select>
+
+					<input type="text" class="form-control" placeholder="User" ng-model="guestUser">
+
 				
 					<button type="submit" class="btn btn-primary">Add</button>
 				
@@ -81,13 +180,6 @@
 		</div>
 </script>
 
-<script type="text/ng-template" id="/home.html">
-	<div class="container">
-	    <h1>Welcome to Home page</h1>
-
-	</div>
-</script>
-
 <script type="text/ng-template" id="/guest_details.html">
 	<div class="container">
 	    <h1>Guest detail</h1>
@@ -101,8 +193,10 @@
 				<input type="text" class="form-control" placeholder="Relation" ng-model="guest.relation">
 
 				<input type="text" class="form-control" placeholder="Table" ng-model="guest.table">
+
+				<input type="text" class="form-control" placeholder="User ID" ng-model="guest.user">
 			
-				<button type="submit" class="btn btn-primary">Add</button>
+				<button type="submit" class="btn btn-primary">Update</button>
 
 			
 			</div>
@@ -112,27 +206,6 @@
 
 	</div>
 </script>
-
-
-
-<script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Im a modal</h3>
-        </div>
-        <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">
-                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ selected.item }}</b>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-        </div>
-</script>
-
 
 </body>
 </html>

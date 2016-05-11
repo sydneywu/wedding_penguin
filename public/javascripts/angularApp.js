@@ -16,7 +16,7 @@ app.config([
 			.state('guests', {
 					url: '/guests',
 					templateUrl: '/guests.html',
-					controller: 'MainCtrl',
+					controller: 'GuestsCtrl',
 					resolve:{								//ensure the getAll function will run first
 						guestsPromise: 
 							['guestsFactory', 
@@ -40,7 +40,7 @@ app.config([
 
 			.state('checklist', {
 				url: '/checklist',
-				templateURL: '/checklist.html',
+				templateUrl: '/checklist.html',
 				controller: 'TodoCtrl',
 				resolve:{
 					checklistPromise: ['checklists', function(checklist){
@@ -49,84 +49,36 @@ app.config([
 				}
 			})
 
+			.state('login', {
+				url: '/login',
+				templateUrl: '/login.html',
+				controller: 'AuthCtrl',
+				onEnter: ['$state', 'authFactory', function($state, authFactory){
+					if (authFactory.isLoggedIn()){
+						$state.go('home');
+					}
+				}]
+			})
+
+			.state('register', {
+					url: '/register',
+					templateUrl: '/register.html',
+					controller: 'AuthCtrl',
+					onEnter: ['$state', 'authFactory', function($state, authFactory){
+					if (authFactory.isLoggedIn()){
+						$state.go('home');
+					}
+				}]
+
+			})
+
+
 
 		//$urlRouterProvider.otherwise('home');
 	
 	}
 ]);
 
-
-app.factory('guestsFactory',['$http', function($http){
-	var o = {
-		guests: [], 
-	};
-
-	o.getAll = function(){
-		return $http.get('/guests').success(function(data){
-			angular.copy(data, o.guests);
-		})
-	}
-
-	o.create = function(guest){
-		return $http.post('/guests', guest).success(function(data){
-			o.guests.push(data);
-		});
-	};
-
-	o.get = function(id){
-		return $http.get('/guests/'+id).then(function(res){
-			//angular.copy(data, o.guest);
-			return res.data;
-		})
-	}
-
-	o.change = function(guest){
-		return $http.put('/guests/' + guest._id + '/change')
-			.success(function(data){
-				guest.relation = 'num';
-			});
-	};
-
-	o.update1= function(guest, data1){
-		return $http.put('/guests/' + guest._id, data1)
-			.success(function(data){
-				console.log('guest updated')
-			})
-	}
-
-	o.delete = function(guest){
-		return $http.delete('/guests/' + guest._id)
-			.success(function(data){
-				console.log('guest deleted')
-			})
-	}
-
-	return o;
-}])
-
-app.controller('GuestCtrl', [
-	'$scope',
-	'$stateParams',
-	'guestsFactory',
-	'guestPromise',
-	function($scope, $stateParams, guestsFactory, guestb){
-		
-		$scope.guest=guestPromise;
-
-		$scope.updateGuest = function(){
-			guestsFactory.update1($scope.guest, {
-				name: $scope.guest.name,
-				relation: $scope.guest.relation,
-				table: $scope.guest.table
-			})
-		}
-
-		$scope.deleteGuest = function(){
-			console.log ($scope.guest);
-			guestsFactory.delete($scope.guest);
-		}
-	}
-])
 
 app.controller('MainCtrl', [
 	'$scope',
@@ -141,21 +93,6 @@ app.controller('MainCtrl', [
 			return new Array(num);
 		}
 
-		$scope.guests = guestsFactory.guests;		//for all guests
-		
-		//$scope.test= $scope.guest;
-
-		$scope.addGuest = function(){
-			if(!$scope.guestName || $scope.guestName ===""){return;}	//error checking
-			guestsFactory.create({												
-				name: $scope.guestName,
-				relation: $scope.guestRelation,
-				table: $scope.guestTable,
-			});
-			//$scope.name='';
-			//$scope.relation='';
-			//$scope.table='';
-		}
 
 		$scope.changeGuest = function(guest){
 			guestsFactory.change(guest)
@@ -188,7 +125,14 @@ app.controller('MainCtrl', [
 }]);
 
 
-
+app.controller('NavCtrl', [
+	'$scope',
+	'authFactory',
+	function($scope, authFactory){
+		$scope.isLoggedIn = authFactory.isLoggedIn;
+		$scope.currentUser = authFactory.currentUser;
+		$scope.logOut = authFactory.logOut;
+}])
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, tables) {
 
