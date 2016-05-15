@@ -16,11 +16,15 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/test', function(req, res, next){
+router.get('/guests', function(req,res,next){
+  res.render('guests', {title: 'Guests' })
+})
+
+router.get('/api/test', function(req, res, next){
   res.render('test', {title: 'test'});
 })
 
-router.post('/register', function(req, res, next){
+router.post('/api/register', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
@@ -38,7 +42,7 @@ router.post('/register', function(req, res, next){
   });
 });
 
-router.post('/login', function(req, res, next){
+router.post('/api/login', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
@@ -59,7 +63,7 @@ module.exports = router;
 
 
 /* Guests page. */
-router.get('/guests', function(req, res, next){
+router.get('/guests/api/guests', function(req, res, next){
   Guest.find(function(err,guests){
 		if(err){return next(err); }
 		res.json(guests);
@@ -101,28 +105,7 @@ router.post('/guests', function(req, res, next) {
 
 
 
-  /*guest.save(function(err, guest){
-    if(err){ return next(err); }
-    res.json(guest);
-  });*/
-
 });
-
-/*router.post('/guests', function(req, res, next) {
-  var guest = new Guest(req.body);
-  guest.user = req.body.user;
-
-  guest.save(function(err, guest){
-    if(err){ return next(err); }
-    
-    req.body.user.guests.push(guest);
-    req.body.user.save(function(err, user){
-      if(err){return next(err);}
-
-      res.json(guest);
-    })
-  });
-});*/
 
 router.param('guest', function(req, res, next, id) {
   var query = Guest.findById(id);
@@ -136,15 +119,15 @@ router.param('guest', function(req, res, next, id) {
   });
 });
 
-router.get('/guests/:guest', function(req, res, next){   //testing put
+router.get('/api/guest/:guest', function(req, res, next){   //testing put
   res.json(req.guest)
 });
 
-router.get('/guests/:guest/here', function(req, res, next){   //testing put
+router.get('/api/guest/:guest/here', function(req, res, next){   //testing put
   res.json(req.guest.table)
 });
 
-router.put('/guests/:guest/change', function(req, res, next){   //testing put
+router.put('/api/guest/:guest/change', function(req, res, next){   //testing put
   req.guest.change(function(err, guest){
     if (err){return next(err);}
 
@@ -169,7 +152,7 @@ router.put('/guests/:guest/change', function(req, res, next){   //testing put
 })*/
 
 
-router.put('/guests/:id', function(req, res){
+router.put('/api/guest/:id', function(req, res){
   Guest.findOneAndUpdate(
     {_id: req.params.id}, 
     {$set: {
@@ -190,7 +173,7 @@ router.put('/guests/:id', function(req, res){
 })
 
 
-router.delete('/guests/:id', function(req, res){
+router.delete('/api/guest/:id', function(req, res){
   Guest.findOneAndRemove(
     { _id: req.params.id}, 
     function(err, newGuest){
@@ -204,7 +187,7 @@ router.delete('/guests/:id', function(req, res){
 })
 
 /* Test User specific Guest List. */
-router.get('/users', function(req, res, next){
+router.get('/api/users', function(req, res, next){
   User.find(function(err,users){
     if(err){return next(err); }
 
@@ -224,7 +207,7 @@ router.param('user', function(req, res, next, id) {
   });
 });
 
-router.get('/users/:user', function(req, res){
+router.get('/api/users/:user', function(req, res){
       //res.json(req.user);
 
       req.user.populate('guests', function(err, guest){
@@ -245,7 +228,7 @@ router.get('/users/:user', function(req, res){
 })*/
 
 
-router.get('/users/:user/guests', function(req, res){
+router.get('/api/users/:user/guests', function(req, res){
   console.log(req.user);
   
   req.user.populate('guests', function(err, guest){

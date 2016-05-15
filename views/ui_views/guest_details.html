@@ -1,0 +1,24 @@
+<div class="container">
+	    <h1>Guest detail</h1>
+
+	    <form ng-submit="updateGuest()">
+			<h3>Update new guest</h3>
+			<div class="form-group">
+			
+				<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guest.name">
+				
+				<input type="text" class="form-control" placeholder="Relation" ng-model="guest.relation">
+
+				<input type="text" class="form-control" placeholder="Table" ng-model="guest.table">
+
+				<input type="text" class="form-control" placeholder="User ID" ng-model="guest.user">
+			
+				<button type="submit" class="btn btn-primary">Update</button>
+
+			
+			</div>
+		</form>
+
+		<a ng-click="deleteGuest()" class ="btn btn-primary btn-small"> Delete Guest </a>
+
+	</div>

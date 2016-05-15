@@ -3,7 +3,8 @@ var app = angular.module('WeddingPenguin',['ui.router', 'ui.bootstrap', 'angular
 app.config([
 	'$stateProvider',
 	'$urlRouterProvider',
-	function($stateProvider, $urlRouterProvider){
+	'$locationProvider',
+	function($stateProvider, $urlRouterProvider, $locationProvider){
 
 		$stateProvider
 			.state('home', {
@@ -28,7 +29,7 @@ app.config([
 
 			.state('guestDetails', {
 					url: '/guests/{id}',
-					templateUrl: '/guest_details.html',
+					templateUrl: '/ui_views/guest_details.html',
 					controller: 'GuestCtrl',
 					resolve:{								//ensure the getAll function will run first
 						guestPromise: ['$stateParams', 'guestsFactory', function($stateParams, guests){
@@ -71,7 +72,6 @@ app.config([
 				}]
 
 			})
-
 
 
 		//$urlRouterProvider.otherwise('home');
