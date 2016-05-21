@@ -5,6 +5,7 @@ var checklistSchema = new mongoose.Schema({
 	category: String,
 	dueDate: Date,
 	dateCreated: Date,
+	user: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 })
 
 mongoose.model('Checklist', checklistSchema);

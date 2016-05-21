@@ -34,15 +34,25 @@ angular.module('WeddingPenguin').factory('authFactory',[
 			}
 		}
 
+		authFactory.currentUserID = function(){
+			if (authFactory.isLoggedIn()){
+				var token = authFactory.getToken();
+				var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+				return payload._id;
+			}
+		}
+
 		authFactory.register = function(user){
-		  return $http.post('/register', user).success(function(data){
+		  return $http.post('/api/register', user).success(function(data){
 		    authFactory.saveToken(data.token);
 		  });
 		};
 
 		authFactory.login = function(user){
-			return $http.post('/login', user).success(function(data){
+			return $http.post('/api/login', user).success(function(data){
 				authFactory.saveToken(data.token);
+				console.log(data.token);
 			});
 		}
 

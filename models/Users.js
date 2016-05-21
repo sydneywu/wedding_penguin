@@ -6,7 +6,8 @@ var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
   hash: String,
   salt: String,
-  guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }]
+  guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }],
+  checklists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Checklist' }],
 });
 
 

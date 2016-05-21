@@ -1,19 +1,31 @@
 angular.module('WeddingPenguin').controller('GuestsCtrl', [
 	'$scope',
+	'$q',
 	'$stateParams',
 	'guestsFactory',
+	'authFactory',
 	'$uibModal',
-	function($scope, $stateParams, guestsFactory, $uibModal){
+	function($scope, $q, $stateParams, guestsFactory, authFactory,$uibModal){
 
+		$scope.totalTables = 5;
+		$scope.getNumber= function(num){
+			 return new Array(num);
+		}
+		$scope.currentUserID = authFactory.currentUserID;
+		var greetings = function(){return 'hello'};
+		//$scope.currentUserID = greetings;
+
+		guestsFactory.getAll();			//run the function to get all guests
 		$scope.guests = guestsFactory.guests;
 
 		$scope.addGuest = function(){
+			
 			if(!$scope.guestName || $scope.guestName ===""){return;}	//error checking
 			guestsFactory.create({												
 				name: $scope.guestName,
 				relation: $scope.guestRelation,
 				table: $scope.guestTable,
-				user: $scope.guestUser
+				user: authFactory.currentUserID()
 			});
 		}
 

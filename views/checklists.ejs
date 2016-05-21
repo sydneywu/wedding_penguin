@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Wedding Penguin</title>
+	<title>Checklists</title>
 	
 	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/public/stylesheets/style.css" rel="stylesheet">
@@ -12,8 +12,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script> <!-- Use angular filter for grouping ng-repeat -->
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-resource.min.js"></script><!--Use resource for crud operation-->
 	<script src="/public/javascripts/angularApp.js"></script>
-	<script src="/public/javascripts/GuestService.js"></script>
-	<script src="/public/javascripts/GuestCtrl.js"></script>
+	<script src="/public/javascripts/guestService.js"></script>
+	<script src="/public/javascripts/checklistService.js"></script>
+	<script src="/public/javascripts/checklistCtrl.js"></script>
 	<script src="/public/javascripts/userService.js"></script>
 	<script src="/public/javascripts/userCtrl.js"></script>
 
@@ -37,52 +38,42 @@
 		<h1>Wedding Penguin</h1>
 	</div>
 
-	<div class="left-bar col-sm-4" ng-controller="GuestsCtrl">
-			
-			<form ng-submit="addGuest()">
-				<h3>Add a new guest</h3>
+	<div class="left-bar col-sm-4" ng-controller="ChecklistsCtrl">
+			<form ng-submit="addChecklist()">
+				<h3>Add a new Checklist</h3>
 				<div class="form-group">
-				
-					<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guestName">
+					<input type="text" class="form-control" placeholder="Checklist's Name" ng-model="checklistName">
 					
-					<input type="text" class="form-control" placeholder="Relation" ng-model="guestRelation">
+					<input type="text" class="form-control" placeholder="Relation" ng-model="checklistCategory">
 
-					<select name='table' ng-model="guestTable">
-						<option ng-repeat="i in getNumber(totalTables) track by $index"> {{$index+1}}</option>
-					</select>
-
-					<input type="text" class="form-control" placeholder="User" ng-model="guestUser">
-
+					<input type="text" class="form-control" placeholder="User" ng-model="checklistDueDate">
 				
 					<button type="submit" class="btn btn-primary">Add</button>
 				
 				</div>
 			</form>
-			<button type="submit" ng-click="open()"class="btn btn-primary">Number of Tables</button>
 	</div>
 		
 		
-	<div class="right-bar col-sm-8" ng-controller="GuestsCtrl">
-
-			<div ng-repeat="(key, value) in (guests| groupBy: 'table')">
-					<h5> Table {{key}} </h5>
+	<div class="right-bar col-sm-8" ng-controller="ChecklistsCtrl">
+			<div>
+					<h5> Checklist </h5>
 					<table class="table table-bordered table-responsive">
 						<tr>
 							<th style="width: 80px;"> Name </th>
-							<th style="width: 20px;"> Table </th>
-							<th style="width: 80px;"> Relation </th>
+							<th style="width: 20px;"> Category </th>
+							<th style="width: 80px;"> Due Date </th>
 							<th style="width: 40px"></th>
 							<th style="width: 40px"></th>
 						</tr>
-						<tr ng-repeat="guest in value">
-							<td style="width: 80px;"><a href="#/guests/{{guest._id}}">{{guest.name}}</a></td>
-							<td style="width: 20px;">{{guest.table}}</td>
-							<td style="width: 80px;">
-								<span ng-click="changeGuest(guest)">+</span>
-								{{guest.relation}}
+						<tr ng-repeat="checklist in checklists">
+							<td style="width: 80px;"><a href="#/checklists/{{checklist._id}}">{{checklist.name}}</a></td>
+							<td style="width: 20px;">{{checklist.category}}</td>
+							<td style="width: 80px;">	
+								{{checklist.category}}
 							</td>
-							<td><a ng-click="editGuest(guest.id)" class="btn btn-small btn-primary">edit</a></td>
-							<td><a ng-click="deleteGuest(guest.id)" class="btn btn-small btn-primary">delete</a></td>
+							<td>edit</td>
+							<td>delete</td>
 						</tr>
 						<br>
 					</table>
