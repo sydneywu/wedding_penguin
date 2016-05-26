@@ -2,10 +2,10 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 	'$scope',
 	'$q',
 	'$stateParams',
+	'$uibModal',
 	'guestsFactory',
 	'authFactory',
-	'$uibModal',
-	function($scope, $q, $stateParams, guestsFactory, authFactory,$uibModal){
+	function($scope, $q, $stateParams, $uibModal, guestsFactory, authFactory){
 
 		$scope.totalTables = 5;
 		$scope.getNumber= function(num){
@@ -19,7 +19,7 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 		$scope.guests = guestsFactory.guests;
 
 		$scope.addGuest = function(){
-			
+
 			if(!$scope.guestName || $scope.guestName ===""){return;}	//error checking
 			guestsFactory.create({												
 				name: $scope.guestName,
@@ -28,6 +28,23 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 				user: authFactory.currentUserID()
 			});
 		}
+
+		$scope.editGuest = function(params) {
+
+		    var modalInstance = $uibModal.open({
+		      animation: $scope.animationsEnabled,
+		      templateUrl: 'guest_details.html',
+		      controller: 'ModalInstanceGuestCtrl',
+		      size: 'lg',
+		      resolve: {
+		        guestPromise: ['guestsFactory', function(guests){
+					return guests.get(params._id);
+				}]
+		      }
+		    });
+		}
+
+			
 
 }])
 
@@ -40,8 +57,6 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 		
 		
 		$scope.guest=guestPromise;
-
-
 
 		$scope.updateGuest = function(){
 			guestsFactory.update1($scope.guest, {
@@ -58,3 +73,42 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 		}
 	}
 ])
+
+app.controller('ModalInstanceGuestCtrl', [
+	'$scope',
+	'$uibModalInstance',
+	'$stateParams',
+	'guestsFactory',
+	'guestPromise',
+	function ($scope, $uibModalInstance, $stateParams, guestsFactory, guestPromise) {
+
+		$scope.guest=guestPromise;
+
+		$scope.updateGuest = function(){
+			guestsFactory.update1($scope.guest, {
+				name: $scope.guest.name,
+				relation: $scope.guest.relation,
+				table: $scope.guest.table,
+				user: $scope.guest.user
+			})
+		}
+
+		$scope.deleteGuest = function(){
+			console.log ($scope.guest);
+			guestsFactory.delete($scope.guest);
+		}
+	
+		$scope.items = [1,2,3];
+		$scope.selected = {
+		item: $scope.items[0]
+		};
+
+		$scope.ok = function () {
+		$uibModalInstance.close($scope.selected.item);
+		};
+
+		$scope.cancel = function () {
+		$uibModalInstance.dismiss('cancel');
+		};
+
+}]);

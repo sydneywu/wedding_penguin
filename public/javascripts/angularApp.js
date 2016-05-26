@@ -1,4 +1,4 @@
-var app = angular.module('WeddingPenguin',['ui.router', 'ui.bootstrap', 'angular.filter', 'ngResource']);
+var app = angular.module('WeddingPenguin',['ui.router', 'ngAnimate', 'ui.bootstrap', 'angular.filter', 'ngResource']);
 
 app.config([
 	'$stateProvider',
@@ -131,9 +131,9 @@ app.controller('NavCtrl', [
 		$scope.isLoggedIn = authFactory.isLoggedIn;
 		$scope.currentUser = authFactory.currentUser;
 		$scope.logOut = authFactory.logOut;
-}])
+}]);
 
-app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, tables) {
+/*app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, tables) {
 
   $scope.items = tables;
   $scope.selected = {
@@ -147,5 +147,59 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, tables) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+});*/
+
+app.controller('ModalDemoCtrl', function ($scope, $uibModal, $log) {
+
+  $scope.items = ['item1', 'item2', 'item3'];
+
+  $scope.animationsEnabled = true;
+
+  $scope.open = function (size) {
+
+    var modalInstance = $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'myModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      size: size,
+      resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+
+  $scope.toggleAnimation = function () {
+    $scope.animationsEnabled = !$scope.animationsEnabled;
+  };
+
 });
 
+// Please note that $uibModalInstance represents a modal window (instance) dependency.
+// It is not the same as the $uibModal service used above.
+
+
+// Please note that $uibModalInstance represents a modal window (instance) dependency.
+// It is not the same as the $uibModal service used above.
+app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
+
+  $scope.items = [1,2,3];
+  $scope.selected = {
+    item: $scope.items[0]
+  };
+
+  $scope.ok = function () {
+    $uibModalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});

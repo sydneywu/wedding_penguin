@@ -11,6 +11,7 @@ mongoose.connect('mongodb://localhost/wedding-penguin');
 
 require ('./models/Guests');
 require ('./models/Checklists');
+require ('./models/Budget');
 require ('./models/Users');
 require ('./config/passport');
 
@@ -18,6 +19,7 @@ require ('./config/passport');
 var routes = require('./routes/index.js');
 var guest_routes = require('./routes/guest_routes.js')
 var checklist_routes = require('./routes/checklist_routes.js')
+var budget_routes = require('./routes/budget_routes.js')
 var users = require('./routes/users');
 
 var app = express();
@@ -39,6 +41,7 @@ app.use(express.static(path.join(__dirname)));  //use to add default directory, 
 app.use('/', routes);
 app.use('/guests', guest_routes);
 app.use('/checklists', checklist_routes);
+app.use('/budget', budget_routes);
 app.use(express.static(path.join(__dirname, 'views')));
 
 // catch 404 and forward to error handler

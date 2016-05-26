@@ -12,13 +12,41 @@ var Checklist = mongoose.model('Checklist');
 var User = mongoose.model('User');
 
 /* GET home page. */
+
+var profileRead = function(req,res){
+  //If no user ID exists in the JWT return a 401
+  console.log(req.payload)
+  if(!req.payload._id){
+    console.log("why?")
+    res.status(401).json({
+      "message": "UnauthorizedError: private profile"
+    });
+  } else{
+    //otherwise continue
+    User
+      .findById(req.payload._id)
+      .exec(function(err,user){
+        res.status(200).json(user);
+      })
+  }
+}
+
+routerA.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({"message" : err.name + ": " + err.message});
+  }
+});
+
 routerA.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-routerA.get('/guests', function(req,res,next){
+routerA.get('/profile', auth, profileRead)
+
+/*routerA.get('/guests', function(req,res,next){
   res.render('guests', {title: 'Guests' })
-})
+})*/
 
 routerA.get('/test', function(req, res, next){
   res.render('test', {title: 'test'});

@@ -30,7 +30,7 @@ angular.module('WeddingPenguin').factory('authFactory',[
 				var token = authFactory.getToken();
 				var payload = JSON.parse($window.atob(token.split('.')[1]));
 
-				return payload.username;
+				return payload.username
 			}
 		}
 
@@ -45,7 +45,7 @@ angular.module('WeddingPenguin').factory('authFactory',[
 
 		authFactory.register = function(user){
 		  return $http.post('/api/register', user).success(function(data){
-		    authFactory.saveToken(data.token);
+		    authFactory.saveToken(data.token);			//save the JWT (generated from routes and models) into local storage
 		  });
 		};
 
@@ -64,4 +64,38 @@ angular.module('WeddingPenguin').factory('authFactory',[
 
 }])
 
+.service('authInterceptor', function (authFactory) {
+  console.log(authFactory.getToken());
+
+  	return {
+  		headers: {Authorization: 'Bearer '+authFactory.getToken()}
+  	}
+
+/*  return {
+    // automatically attach Authorization header
+    request: function(config) {
+      var token = authFactory.getToken();
+
+      if(token && config.url.indexOf(API)){
+        config.headers.Authorization = 'Bearer ' + token;
+      }
+      return config;
+    },
+
+    // If a token was sent back, save it
+    response: function(res) {
+
+      if(res.config.url.indexOf(API) === 0 && res.data.token){
+      	authFactory.saveToken(res.data.token)
+      }
+      return res;
+    },
+  }*/
+})
+
+/*.config(function($httpProvider) {
+  $httpProvider.interceptors.push('authInterceptor');
+})
+.constant('API', '/api')
+*/
 

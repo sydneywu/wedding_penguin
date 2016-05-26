@@ -2,7 +2,9 @@ angular.module('WeddingPenguin').controller('AuthCtrl',[
 	'$scope',
 	'$state',
 	'authFactory',
-	function($scope, $state, authFactory){
+	'authInterceptor',
+	'$http',
+	function($scope, $state, authFactory, AuthInterceptor, $http){
 		
 		$scope.user = {};
 
@@ -21,5 +23,21 @@ angular.module('WeddingPenguin').controller('AuthCtrl',[
 				$state.go('home');
 			});		
 		};
+
+		function handleRequest(res) {
+		    var token = res.data ? res.data.token : null;
+		    if(token) { console.log('JWT:', token); }
+		    self.message = res.data.message;
+		  }
+
+
+		function test(){
+			return $http.get('api/guests')
+		}
+
+		$scope.getQuote = function() {
+		    test()
+		    .then(handleRequest, handleRequest)
+		 }
 
 }])
