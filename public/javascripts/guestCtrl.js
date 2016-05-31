@@ -11,11 +11,11 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 		$scope.getNumber= function(num){
 			 return new Array(num);
 		}
+
 		$scope.currentUserID = authFactory.currentUserID;
-		var greetings = function(){return 'hello'};
-		//$scope.currentUserID = greetings;
 
 		guestsFactory.getAll();			//run the function to get all guests
+		
 		$scope.guests = guestsFactory.guests;
 
 		$scope.addGuest = function(){

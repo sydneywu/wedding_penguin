@@ -1,4 +1,9 @@
-var app = angular.module('WeddingPenguin',['ui.router', 'ngAnimate', 'ui.bootstrap', 'angular.filter', 'ngResource']);
+var app = angular.module('WeddingPenguin',[
+	'ui.router', 
+	'ngAnimate', 
+	'ui.bootstrap', 
+	'angular.filter', 
+	'ngResource']);
 
 app.config([
 	'$stateProvider',
@@ -14,18 +19,6 @@ app.config([
 
 			})
 
-			.state('guests', {
-					url: '/guests',
-					templateUrl: '/guests.html',
-					controller: 'GuestsCtrl',
-					resolve:{								//ensure the getAll function will run first
-						guestsPromise: 
-							['guestsFactory', 
-							function(guests){ 
-								return guests.getAll();
-							}]
-					}
-			})
 
 			.state('guestDetails', {
 					url: '/guests/{id}',
@@ -72,11 +65,7 @@ app.config([
 				}]
 
 			})
-
-
-	
-	}
-]);
+}]);
 
 
 app.controller('MainCtrl', [

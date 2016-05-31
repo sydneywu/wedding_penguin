@@ -1,33 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>Wedding Penguin</title>
-	
-	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/public/stylesheets/style.css" rel="stylesheet">
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
-    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.3.js"></script>
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script> <!-- Use angular filter for grouping ng-repeat -->
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-resource.min.js"></script><!--Use resource for crud operation-->
-	<script src="/public/javascripts/angularApp.js"></script>
-	<script src="/public/javascripts/GuestService.js"></script>
-	<script src="/public/javascripts/GuestCtrl.js"></script>
-	<script src="/public/javascripts/userService.js"></script>
-	<script src="/public/javascripts/userCtrl.js"></script>
-
-<!-- Views -->
-
+  <% include partials/_head_main_script.ejs %>
+  <% include partials/_head_home_script.ejs %>
 
 </head>
+
 <body ng-app="WeddingPenguin">
 	<div class="container" ng-controller="MainCtrl">
 	
-		<% include partials/header.ejs %>
+		<% include partials/_header.ejs %>
 		<ui-view></ui-view>
 
 	</div><!--end container-->
@@ -35,8 +18,8 @@
 
 
 
-	<div class="page-header">
-		<h1>Wedding Penguin</h1>
+	<div class="page-header clear">
+		<h1>Guest View</h1>
 	</div>
 
 	<div class="left-bar col-sm-4" ng-controller="GuestsCtrl">

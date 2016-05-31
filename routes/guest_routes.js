@@ -6,7 +6,6 @@ var auth = jwt({secret: 'SECRET', userProperty:'payload'})
 var mongoose = require('mongoose');
 var passport = require('passport');
 
-
 var Guest = mongoose.model('Guest');
 var User = mongoose.model('User');
 
@@ -16,11 +15,7 @@ router.get('/',function(req,res,next){
   res.render('guests', {title: 'Guests' })
 })
 
-
-
-
 /* Guests page. */
-
 
 router.get('/api/guests', auth, function(req, res, next){
   console.log(req.payload._id)

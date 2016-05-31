@@ -1,13 +1,62 @@
+/* General Styling */
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-left: 50px;
+  padding-right: 50px;  
+  font: 14px "Open Sans", Helvetica, Arial, sans-serif;
 }
+	a { color: #00B7FF;}
+	
+	/*Common Class*/
+	.clear{ clear: both; }
+	.margin-top-10{margin-top:10px;}
+	.margin-top-20{margin-top:20px;}
+	.margin-top-30{margin-top:30px;}
+	.margin-top-40{margin-top:40px;}
+	.margin-top-50{margin-top:50px;}
+	.margin-top-60{margin-top:60px;}
+	.margin-top-70{margin-top:70px;}
+	.margin-top-80{margin-top:80px;}
+	
+	.padding-top-10{padding-top:10px;}
+	.padding-top-20{padding-top:20px;}
+	.padding-top-30{padding-top:30px;}
+	.padding-top-40{padding-top:40px;}
+	.padding-top-50{padding-top:50px;}
+	
+	.border-grey-thin{border-style: solid; border-width: 1px; border-color: #999;}
 
-a {
-  color: #00B7FF;
-}
 
-#header{
-	width: full;
-	background-color: #555;
-}
+
+/******* Header and Nav **********/
+	#header{width: full; background-color: #fff;}
+		#header-left-wrapper{float: left;}
+		#header-right-wrapper{float:right;}
+		#logo{width: 80px; height: auto;}
+
+	/*Nav*/
+		.navbar-nav>li>a{padding: 5px 10px 5px 10px;}
+
+		#profile-menu{float: right;	margin: 0 0 0 0;}
+			#profile-menu a{color: #999; font-size: 0.8em;}
+
+		#main-menu{
+			float: right;
+			color: black;
+			margin-top: 0;
+			padding-top: 0;
+		}
+			#main-menu a{color: #999; font-size: 0.9em;}
+
+		#header-divider{
+			width: 100%;
+			height: 7px;
+			background-image: url("/public/images/border.jpg");
+		}
+
+/******* Home Page **********/
+#home-banner{width:100%; height: auto;}
+#vendor-section{text-align: center;}
+
+	.vendor-pic-container{display:inline-block; padding: 5px 3px 3px 3px;}
+	#vendor-section img{width: 150px; height: auto;}

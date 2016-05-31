@@ -46,13 +46,14 @@ angular.module('WeddingPenguin').factory('authFactory',[
 		authFactory.register = function(user){
 		  return $http.post('/api/register', user).success(function(data){
 		    authFactory.saveToken(data.token);			//save the JWT (generated from routes and models) into local storage
+		  	console.log(data.token);					//tbf
 		  });
 		};
 
 		authFactory.login = function(user){
 			return $http.post('/api/login', user).success(function(data){
 				authFactory.saveToken(data.token);
-				console.log(data.token);
+				console.log(data.token);				//tbf
 			});
 		}
 
@@ -65,6 +66,7 @@ angular.module('WeddingPenguin').factory('authFactory',[
 }])
 
 .service('authInterceptor', function (authFactory) {
+  
   console.log(authFactory.getToken());
 
   	return {
