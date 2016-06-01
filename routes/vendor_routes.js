@@ -9,16 +9,6 @@ var passport = require('passport');
 
 var Vendor = mongoose.model('Vendor');
 
-router.use(function(req, res, next){
-	var token = req.body.token || req.query.token || req.headers['x-access-token'];
-	if(token){ 
-		console.log('token exists')
-	} else {
-		console.log('token not exists')
-	}
-
-})
-
 router.get('/', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
 })
@@ -29,6 +19,11 @@ router.get('/register', function(req,res,next){
 
 router.get('/login', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
+})
+
+router.get('/profile', function(req,res,next){
+
+	res.render('vendor/profile', {title:'Vendor Admin'})
 })
 
 
@@ -54,28 +49,68 @@ router.post('/api/register', function(req,res,next){
 	});
 });
 
-router.post('/api/login', function(req,res,next){
-	if(!req.body.username || !req.body.password){
-		return res.status(400).json({message: 'Please fill out all fields'});
-	}
 
-	passport.authenticate('local', function(err, vendor, info){
-		if(err){return next(err);}
+router.post('/api/login', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
 
-		if(vendor){
-			return res.json({token: vendor.generateJWT()})
-		} else {
-			return res.status(401).json(info);
-		}
-	})(req,res,next);
+  passport.authenticate('local_vendor', function(err, vendor, info){
+    if(err){ return next(err); }
+
+    if(vendor){
+      return res.json({token: vendor.generateJWT()});
+    } else {
+      return res.status(401).json(info);
+    }
+  })(req, res, next);
 });
 
 router.get('/api/vendors', function(req, res, next){
   Vendor.find(function(err,vendors){
     if(err){return next(err); }
-
     res.json(vendors);
   })
+})
+
+
+router.param('vendor', function(req, res, next, id) {
+  var query = Vendor.findById(id);
+
+  console.log('testing')
+
+  query.exec(function (err, vendor){
+    if (err) { return next(err); }
+    if (!vendor) { return next(new Error('can\'t find vendor')); }
+
+    req.vendor = vendor;
+    return next();
+  });
+});
+
+router.get('/api/vendor/:vendor', function(req, res, next){   
+  res.json(req.vendor)
+});
+
+router.put('/api/vendor/:vendor', function(req, res){
+  Vendor.findOneAndUpdate(
+    {_id: req.vendor._id}, 
+    {$set: {
+      username: req.body.username,
+      email: req.body.email,
+      address: req.body.address,
+      phone: req.body.phone,
+      website: req.body.website
+    }},
+    function(err, newVendor){
+        if(err){
+          console.log('error updating');
+        } else {
+          console.log(newVendor);
+          res.send(newVendor);
+        }
+    }
+  )
 })
 
 module.exports = router;

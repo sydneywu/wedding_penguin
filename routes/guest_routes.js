@@ -73,7 +73,7 @@ router.param('guest', function(req, res, next, id) {
   });
 });
 
-router.get('/api/guest/:guest', function(req, res, next){   //testing put
+router.get('/api/guest/:guest', function(req, res, next){ 
   res.json(req.guest)
 });
 

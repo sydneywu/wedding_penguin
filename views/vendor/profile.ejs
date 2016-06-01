@@ -2,13 +2,30 @@
 <html lang="en">
 <head>
   <% include ../partials/_head_main_script.ejs %>
-  <% include ../partials/_head_home_script.ejs %>
+  <% include ../partials/_head_vendor_script.ejs %>
 </head>
 
 <body ng-app="WeddingVendor">
 
-	<div class="container" ng-controller="VendorCtrl">
-		Fetching Profile
+	<div class="container" ng-controller="VendorProfileCtrl">
+	    <form ng-submit="updateVendor()">
+			<h3>Update Profile</h3>
+
+			<div class="form-group">
+			
+				<input type="text" class="form-control" placeholder="Guest's Name" ng-model="vendor.username">
+				<input type="text" class="form-control" placeholder="Email" ng-model="vendor.email">
+				<input type="text" class="form-control" placeholder="website" ng-model="vendor.website">
+				<input type="text" class="form-control" placeholder="phone" ng-model="vendor.phone">
+				<input type="text" class="form-control" placeholder="id" ng-model="vendor._id">
+
+
+			
+				<button type="submit" class="btn btn-primary">Update</button>
+
+			
+			</div>
+		</form>
 	</div>
 	
 

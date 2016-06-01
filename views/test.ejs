@@ -1,5 +1,19 @@
-<html>
-<body>
-	<div> Test App</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/_head_main_script.ejs %>
+  <script src="/public/javascripts/angularApp.js"></script>
+  <script src="/public/javascripts/testCtrl.js"></script>
+</head>
+
+<body ng-app="WeddingPenguin">
+
+	<div class="container" ng-controller="TestCtrl">
+		<h1>Result: {{result}}</h1>
+		<h2>Time: {{elapsedTime}}</h2>
+	</div><!--end container-->
+
+
 </body>
 </html>

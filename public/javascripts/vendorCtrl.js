@@ -10,13 +10,21 @@ vendorApp.config([
 	'$urlRouterProvider',
 	'$locationProvider',
 	function($stateProvider, $urlRouterProvider, $locationProvider){
-		$stateProvider.state('login', {
+	  $stateProvider
+		.state('profile', {
+					url: '/profile',					// use id to display individual records
+					templateUrl: '/vendor/profile.html',
+					controller: 'MainCtrl',
+
+			})
+
+		.state('login', {
 			url: '/login',
 			templateUrl: '/login.html',
 			controller: 'AuthCtrl',
 			onEnter: ['$state', 'authFactory', function($state, authFactory){
 				if (authFactory.isLoggedIn()){
-					$state.go('home');
+					$state.go('profile');
 				}
 			}]
 		})
@@ -27,7 +35,7 @@ vendorApp.config([
 				controller: 'AuthCtrl',
 				onEnter: ['$state', 'authFactory', function($state, authFactory){
 				if (authFactory.isLoggedIn()){
-					$state.go('home');
+					$state.go('profile');
 				}
 			}]
 		})
@@ -50,7 +58,8 @@ vendorApp.controller('VendorCtrl',[
 	'$state',
 	'vendorFactory',
 	'$http',
-	function($scope, $state, vendorFactory, $http){
+	'$window',
+	function($scope, $state, vendorFactory, $http, $window){
 		
 		$scope.vendor = {};
 
@@ -58,18 +67,43 @@ vendorApp.controller('VendorCtrl',[
 			vendorFactory.register($scope.vendor).error(function(error){
 				$scope.error = error;
 			}).then(function(){
-				$state.go('home');			//tbf (to be fixed)
+				$window.location.href = '/vendor/profile';			//tbf (to be fixed)
 			})
 		}
 
 		$scope.login = function(){
-			authFactory.login($scope.vendor).error(function(error){
+			vendorFactory.login($scope.vendor).error(function(error){
 				$scope.error = error;
 			}).then(function(){
-				$state.go('home');			//tbf
+				$window.location.href = '/vendor/profile';			//tbf
 			});		
 		};
+}])
 
+vendorApp.controller('VendorProfileCtrl',[
+	'$scope',
+	'$stateParams',
+	'vendorFactory',
+	'vendorProfileFactory',
+	'vendorInterceptor',
 
+	function($scope, $stateParams, vendorFactory, vendorProfileFactory, vendorInterceptor){
+		
+		
+		var promise = vendorProfileFactory.getProfile();
+
+		promise.then(function(result){
+			$scope.vendor=result;
+		})
+
+		$scope.updateVendor = function(){
+			vendorProfileFactory.update($scope.guest, {
+				_id: $scope.vendor._id,
+				username: $scope.vendor.username,
+				email: $scope.vendor.email,
+				phone: $scope.vendor.phone,
+				website: $scope.vendor.website
+			})
+		}
 
 }])

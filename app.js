@@ -17,6 +17,8 @@ require ('./models/Vendors');
 require ('./config/passport');
 
 
+require ('./config/passportVendor')
+
 var routes = require('./routes/index.js');
 var guest_routes = require('./routes/guest_routes.js')
 var checklist_routes = require('./routes/checklist_routes.js')

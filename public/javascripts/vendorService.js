@@ -42,7 +42,7 @@ vendorApp.factory('vendorFactory',[
 		}
 
 		o.login = function(vendor){
-			return $http.post('/api/login', vendor).success(function(data){
+			return $http.post('/vendor/api/login', vendor).success(function(data){
 				o.saveToken(data.token);
 		  		console.log(data.token);					//tbf
 
@@ -53,5 +53,75 @@ vendorApp.factory('vendorFactory',[
 			$window.localStorage.removeItem('wedding-penguin-vendor');
 		}
 
+		o.get = function(id){
+			return $http.get('/vendor/api/profile', authInterceptor).then(function(res){
+				//angular.copy(data, o.guest);
+				return res.data;
+			})
+		}
+
 		return o;
+}])
+
+
+
+.service('vendorInterceptor', [
+	'$window', 
+	'vendorFactory', 
+	function ($window, vendorFactory) {
+  
+	console.log('User is Logged In: ' + vendorFactory.isLoggedIn());
+	if(vendorFactory.isLoggedIn()){
+		return {headers: {Authorization: 'Bearer '+ vendorFactory.getToken()}}	
+	} else {
+		$window.location.href = '/vendor/login';
+	}
+
+}])
+
+vendorApp.factory('vendorProfileFactory',[
+	'$http',
+	'vendorFactory',
+	'vendorInterceptor',
+	function($http, vendorFactory, vendorInterceptor){
+		
+		var o = {vendors: []};
+
+		o.getAll = function(){
+			return $http.get('/vendor/api/vendors', vendorInterceptor).success(function(data){
+				angular.copy(data, o.vendors);
+			})
+		}
+		o.get = function(id){
+			return $http.get('/vendor/api/vendor/'+ vendorFactory.currentVendor()._id, vendorInterceptor).then(function(res){
+				//angular.copy(data, o.guest);
+				return res.data;
+			})
+		}
+
+		o.getProfile = function(){
+			return $http.get('/vendor/api/vendor/' + vendorFactory.currentVendor()._id).then(function(res){
+				return res.data;
+			})
+		}
+
+
+		o.update= function(vendor, data){
+			return $http.put('/vendor/api/vendor/' + vendorFactory.currentVendor()._id, data)
+				.success(function(data){
+					console.log('guest updated')
+				})
+		}
+
+		o.delete = function(vendor){
+			return $http.delete('/vendor/api/vendor/' + vendor._id)
+				.success(function(data){
+					console.log('vendor deleted')
+				})
+		}
+
+		return o;
+
+
+
 }])
