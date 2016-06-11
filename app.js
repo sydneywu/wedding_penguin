@@ -24,6 +24,7 @@ var guest_routes = require('./routes/guest_routes.js')
 var checklist_routes = require('./routes/checklist_routes.js')
 var budget_routes = require('./routes/budget_routes.js')
 var vendor_routes = require('./routes/vendor_routes.js')
+var vendor_list_routes = require('./routes/vendor_list_routes.js')
 var users = require('./routes/users');
 
 var app = express();
@@ -47,6 +48,7 @@ app.use('/guests', guest_routes);
 app.use('/checklists', checklist_routes);
 app.use('/budget', budget_routes);
 app.use('/vendor', vendor_routes);
+app.use('/vendor-listing/', vendor_list_routes);
 app.use(express.static(path.join(__dirname, 'views')));
 
 // catch 404 and forward to error handler

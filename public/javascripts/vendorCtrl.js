@@ -41,8 +41,6 @@ vendorApp.config([
 		})
 }]);
 
-
-
 vendorApp.controller('VendorNavCtrl'),[
 	'$scope',
 	'vendorFactory',
@@ -86,8 +84,8 @@ vendorApp.controller('VendorProfileCtrl',[
 	'vendorFactory',
 	'vendorProfileFactory',
 	'vendorInterceptor',
-
-	function($scope, $stateParams, vendorFactory, vendorProfileFactory, vendorInterceptor){
+	'$http',
+	function($scope, $stateParams, vendorFactory, vendorProfileFactory, vendorInterceptor, $http){
 		
 		
 		var promise = vendorProfileFactory.getProfile();
@@ -96,14 +94,56 @@ vendorApp.controller('VendorProfileCtrl',[
 			$scope.vendor=result;
 		})
 
+		$scope.categories = ["Category", "Venue", "Bridal", "Photographer", "Videographer"];
+
 		$scope.updateVendor = function(){
 			vendorProfileFactory.update($scope.guest, {
 				_id: $scope.vendor._id,
 				username: $scope.vendor.username,
 				email: $scope.vendor.email,
 				phone: $scope.vendor.phone,
-				website: $scope.vendor.website
+				website: $scope.vendor.website,
+				category: $scope.vendor.category
 			})
 		}
 
-}])
+		$scope.uploadFile = function(){
+
+	        var file = $scope.myFile;
+	        var uploadUrl = "photos/upload/";
+	        var fd = new FormData();
+	        fd.append('file', file);
+
+	        $http.post(uploadUrl,fd, {
+	            transformRequest: angular.identity,
+	            headers: {
+	            	'Content-Type': undefined,
+	        		Authorization: 'Bearer '+ vendorFactory.getToken()
+	        	}
+	        })
+	        .success(function(){
+	          console.log("success!!");
+	        })
+	        .error(function(){
+	          console.log("error!!");
+	        });
+	    };
+
+}]);
+
+angular.module('WeddingVendor').directive('fileModel', ['$parse', function ($parse) {
+return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
+
+        element.bind('change', function(){
+            scope.$apply(function(){
+                modelSetter(scope, element[0].files[0]);
+            });
+        });
+    }
+};
+}]);
+

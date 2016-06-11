@@ -10,7 +10,7 @@
 	<div class="container" ng-controller="VendorProfileCtrl">
 	    <form ng-submit="updateVendor()">
 			<h3>Update Profile</h3>
-
+			
 			<div class="form-group">
 			
 				<input type="text" class="form-control" placeholder="Guest's Name" ng-model="vendor.username">
@@ -18,6 +18,10 @@
 				<input type="text" class="form-control" placeholder="website" ng-model="vendor.website">
 				<input type="text" class="form-control" placeholder="phone" ng-model="vendor.phone">
 				<input type="text" class="form-control" placeholder="id" ng-model="vendor._id">
+				<input type="text" class="form-control" placeholder="avatar" ng-model="vendor.avatar">
+				<select name='category' ng-model="vendor.category">
+					<option ng-repeat="o in categories" placeholder="category">{{o}}</option>
+				</select>
 
 
 			
@@ -26,6 +30,17 @@
 			
 			</div>
 		</form>
+
+		<form method="post" enctype="multipart/form-data" action = "photos/upload">
+			<input type="text" name="title" placeholder="title">
+			<input type="file" name="file">
+			<input type="submit">
+		</form>
+		
+		<br><br>
+		<input type="file" file-model="myFile"/>
+		<button ng-click="uploadFile()">Upload</button>
+
 	</div>
 	
 

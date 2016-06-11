@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/_head_main_script.ejs %>
+  <% include partials/_head_home_script.ejs %>
+
+</head>
+
+<body ng-app="WeddingPenguin">
+	<div class="container" ng-controller="MainCtrl">
+	
+		<% include partials/_header.ejs %>
+		<ui-view></ui-view>
+
+	</div><!--end container-->
+	
+
+
+
+	<div class="page-header clear">
+		<h1>Vendor Listing</h1>
+	</div>
+
+	<div class="left-bar col-sm-4" ng-controller="GuestsCtrl">
+			<h2> Temporary Placeholder </h2>
+			
+	</div>
+		
+		
+	<div class="right-bar col-sm-8" ng-controller="VendorsListCtrl">
+
+			<div ng-repeat="vendor in vendors">
+				<h5> {{vendor.username}} </h5>
+				<h5> {{vendor.email}} </h5>
+			</div>
+
+	</div>
+
+</body>
+</html>

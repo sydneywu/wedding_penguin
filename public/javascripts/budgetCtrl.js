@@ -7,4 +7,4 @@ angular.module("WeddingPenguin").controller('BudgetCtrl',
 			$scope.currentUser = budgetFactory.get({budget: userID});
 		}
 
-	})
+})

@@ -5,9 +5,45 @@ var auth = jwt({secret: 'SECRET', userProperty:'payload'})
 
 var mongoose = require('mongoose');
 var passport = require('passport');
-
-
 var Vendor = mongoose.model('Vendor');
+
+/******* Picture Upload Middleware ************/
+var multer = require('multer');
+var storage = multer.diskStorage({
+ 
+  destination: function(req, file, cb){
+    cb(null, './public/images/vendor/upload')
+  },
+  filename: function (req, file, cb){
+    cb(null, 'avatar' + '-' + Date.now()+'.jpg' )
+  }  
+
+})
+var upload = multer({storage: storage,})
+
+
+router.post('/photos/upload', auth, upload.single('file'), function(req,res){
+  console.log(req.payload._id);
+  
+  console.log(req.file.filename)
+  
+  Vendor.findOneAndUpdate(
+    {_id: req.payload._id}, 
+    {$set: {
+      avatar: req.file.filename
+    }},
+    function(err, vendor){
+    if(err){
+      console.log('error updating');
+    } else {
+      console.log(req.file.filename)
+      console.log(vendor);
+      res.send(vendor);
+    }
+
+  })
+
+});
 
 router.get('/', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
@@ -76,8 +112,6 @@ router.get('/api/vendors', function(req, res, next){
 
 router.param('vendor', function(req, res, next, id) {
   var query = Vendor.findById(id);
-
-  console.log('testing')
 
   query.exec(function (err, vendor){
     if (err) { return next(err); }

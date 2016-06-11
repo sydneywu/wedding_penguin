@@ -9,7 +9,9 @@ var VendorSchema = new mongoose.Schema({
 	website: String,
 	email: String,
 	phone: String,
-	Facebook: String,
+	facebook: String,
+  category: String,
+  avatar: String
 });
 
 VendorSchema.methods.setPassword = function(password){
