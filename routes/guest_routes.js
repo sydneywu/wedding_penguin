@@ -17,6 +17,7 @@ router.get('/',function(req,res,next){
 
 /* Guests page. */
 
+
 router.get('/api/guests', auth, function(req, res, next){
   console.log(req.payload._id)
   Guest.find({"user": req.payload._id}).exec(function(err,guests){
@@ -25,24 +26,21 @@ router.get('/api/guests', auth, function(req, res, next){
   })
 });
 
+router.post('/api/guests', auth, function(req,res,next){
+  var query = User.findById(req.body.user);
+
+  query.exec(function (err, user){
+    if (err) { return next(err); }
+    if (!user) { return next(new Error('can\'t find user')); }
+    req.user = user;
+    return next();
+  });
+
+
+})
+
 router.post('/api/guests', auth, function(req, res, next) {
   var guest = new Guest(req.body);
-  console.log(req.body.user);
-  var query = User.findById(req.body.user);
-  
-  var findUser = function(){
-    query.exec(function (err, user){
-      if (err) { return next(err); }
-      if (!user) { return next(new Error('can\'t find user')); }
-      req.user = user;
-      console.log(req.user);
-      return req.user;
-    });
-  };
-
-  console.log(findUser());
-
-  req.user=findUser();
 
   guest.save(function(err, guest){
     if(err){ return next(err); }

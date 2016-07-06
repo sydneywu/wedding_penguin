@@ -22,24 +22,38 @@
 				<select name='category' ng-model="vendor.category">
 					<option ng-repeat="o in categories" placeholder="category">{{o}}</option>
 				</select>
-
-
-			
+	
 				<button type="submit" class="btn btn-primary">Update</button>
-
-			
+				
 			</div>
-		</form>
-
-		<form method="post" enctype="multipart/form-data" action = "photos/upload">
-			<input type="text" name="title" placeholder="title">
-			<input type="file" name="file">
-			<input type="submit">
 		</form>
 		
 		<br><br>
+		<h2> Upload Profile Picture </h2>
 		<input type="file" file-model="myFile"/>
-		<button ng-click="uploadFile()">Upload</button>
+		<button ng-click="uploadProfilePic()">Upload</button>
+
+		<br><br>
+
+		<div ng-repeat="gallery in vendor.gallery">
+			<h3>{{gallery.name}}<h3>
+				<h4>Upload Image </h4>
+					<input type="file" file-model="myFile"/>
+					<button ng-click="uploadGalleryImage()">Upload</button>
+			<div ng-repeat="image in gallery.images">
+				{{image.url}}
+			</div>
+		</div>
+	
+		<form ng-submit="addGallery()">
+			<h3>Add New Gallery</h3>
+			<div class="form-group">
+
+				<input type="text" class="form-control" placeholder="Gallery Name" ng-model="vendor.galleryName">
+				
+				<button type="submit" class="btn btn-primary">Update</button>
+			</div>
+		</form>
 
 	</div>
 	

@@ -2,6 +2,15 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
+var gallerySchema = new mongoose.Schema({
+  name: String,
+  images: [{
+    name: String,
+    path: String
+  }]
+
+})
+
 var VendorSchema = new mongoose.Schema({
 	username: {type: String, lowercase: true, unique: true},
 	hash: String,
@@ -11,7 +20,8 @@ var VendorSchema = new mongoose.Schema({
 	phone: String,
 	facebook: String,
   category: String,
-  avatar: String
+  avatar: String,
+  gallery: [gallerySchema]
 });
 
 VendorSchema.methods.setPassword = function(password){

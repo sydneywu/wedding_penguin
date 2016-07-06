@@ -109,7 +109,7 @@ vendorApp.factory('vendorProfileFactory',[
 		o.update= function(vendor, data){
 			return $http.put('/vendor/api/vendor/' + vendorFactory.currentVendor()._id, data)
 				.success(function(data){
-					console.log('guest updated')
+					console.log('vendor updated')
 				})
 		}
 
@@ -120,8 +120,31 @@ vendorApp.factory('vendorProfileFactory',[
 				})
 		}
 
+
+
+		o.createGallery = function(vendor, data){
+			return $http.put('/vendor/api/vendor/' + vendorFactory.currentVendor()._id +'/gallery/', data)
+				.success(function(data){
+					console.log('vendor updated')
+				})
+		}
+
+		o.uploadImage = function(uploadURL, fd){
+			return $http.post(uploadURL,fd, {
+	            transformRequest: angular.identity,
+	            headers: {
+	            	'Content-Type': undefined,
+	        		Authorization: 'Bearer '+ vendorFactory.getToken()
+	        	}
+	        })
+	        .success(function(){
+	          console.log("success!!");
+	        })
+	        .error(function(){
+	          console.log("error!!");
+	        });
+		}
+
 		return o;
-
-
 
 }])

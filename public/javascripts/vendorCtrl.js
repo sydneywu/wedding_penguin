@@ -87,17 +87,20 @@ vendorApp.controller('VendorProfileCtrl',[
 	'$http',
 	function($scope, $stateParams, vendorFactory, vendorProfileFactory, vendorInterceptor, $http){
 		
-		
-		var promise = vendorProfileFactory.getProfile();
+		var getVendor = function(){
+			var promise = vendorProfileFactory.getProfile();
 
-		promise.then(function(result){
-			$scope.vendor=result;
-		})
+			promise.then(function(result){
+				$scope.vendor=result;
+			})
+		}
+
+		getVendor();
 
 		$scope.categories = ["Category", "Venue", "Bridal", "Photographer", "Videographer"];
 
 		$scope.updateVendor = function(){
-			vendorProfileFactory.update($scope.guest, {
+			vendorProfileFactory.update($scope.vendor, {
 				_id: $scope.vendor._id,
 				username: $scope.vendor.username,
 				email: $scope.vendor.email,
@@ -105,28 +108,36 @@ vendorApp.controller('VendorProfileCtrl',[
 				website: $scope.vendor.website,
 				category: $scope.vendor.category
 			})
-		}
+		};
 
-		$scope.uploadFile = function(){
+		$scope.addGallery = function(){
+			vendorProfileFactory.createGallery($scope.vendor, {
+				galleryName: $scope.vendor.galleryName
+			})
+
+			getVendor();
+		};
+
+		$scope.uploadProfilePic = function(){
 
 	        var file = $scope.myFile;
-	        var uploadUrl = "photos/upload/";
+	        var uploadURL = "photos/upload/";
 	        var fd = new FormData();
 	        fd.append('file', file);
 
-	        $http.post(uploadUrl,fd, {
-	            transformRequest: angular.identity,
-	            headers: {
-	            	'Content-Type': undefined,
-	        		Authorization: 'Bearer '+ vendorFactory.getToken()
-	        	}
-	        })
-	        .success(function(){
-	          console.log("success!!");
-	        })
-	        .error(function(){
-	          console.log("error!!");
-	        });
+	        vendorProfileFactory.uploadImage(uploadURL, fd);
+
+	    };
+
+	   	$scope.uploadProfilePic = function(){
+
+	        var file = $scope.myFile;
+	        var uploadURL = "photos/gallery/";
+	        var fd = new FormData();
+	        fd.append('file', file);
+
+	        vendorProfileFactory.uploadImage(uploadURL, fd);
+
 	    };
 
 }]);

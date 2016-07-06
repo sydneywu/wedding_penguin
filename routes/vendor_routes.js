@@ -9,41 +9,71 @@ var Vendor = mongoose.model('Vendor');
 
 /******* Picture Upload Middleware ************/
 var multer = require('multer');
-var storage = multer.diskStorage({
- 
-  destination: function(req, file, cb){
-    cb(null, './public/images/vendor/upload')
-  },
-  filename: function (req, file, cb){
-    cb(null, 'avatar' + '-' + Date.now()+'.jpg' )
-  }  
 
-})
-var upload = multer({storage: storage,})
-
-
-router.post('/photos/upload', auth, upload.single('file'), function(req,res){
-  console.log(req.payload._id);
-  
-  console.log(req.file.filename)
-  
-  Vendor.findOneAndUpdate(
-    {_id: req.payload._id}, 
-    {$set: {
-      avatar: req.file.filename
-    }},
-    function(err, vendor){
-    if(err){
-      console.log('error updating');
-    } else {
-      console.log(req.file.filename)
-      console.log(vendor);
-      res.send(vendor);
-    }
-
-  })
-
+router.post('/photos/upload', 
+  auth, 
+  multer({                                          // multer middleware
+    storage: multer.diskStorage({
+      destination: function(req, file, cb){
+        cb(null, './public/images/vendor/upload')
+      },
+      filename: function (req, file, cb){
+        cb(null, 'profile' + '-' + Date.now()+'.jpg' )
+      }
+    })  
+  }).single('file'),
+  function(req,res){
+    console.log(req.payload._id);
+    console.log(req.file.filename)
+    
+    Vendor.findOneAndUpdate(
+      {_id: req.payload._id}, 
+      {$set: {
+        avatar: req.file.filename
+      }},
+      function(err, vendor){
+      if(err){
+        console.log('error updating');
+      } else {
+        console.log(req.file.filename)
+        console.log(vendor);
+        res.send(vendor);
+      }
+    })
 });
+
+router.post('/photos/upload', 
+  auth, 
+  multer({                                          // multer middleware
+    storage: multer.diskStorage({
+      destination: function(req, file, cb){
+        cb(null, './public/images/vendor/gallery')
+      },
+      filename: function (req, file, cb){
+        cb(null, 'image' + '-' + Date.now()+'.jpg' )
+      }
+    })  
+  }).single('file'),
+  function(req,res){
+    console.log(req.payload._id);
+    console.log(req.file.filename)
+    
+    Vendor.findOneAndUpdate(
+      {_id: req.payload._id}, 
+      {$set: {
+        avatar: req.file.filename         //issue: need to push into gallery.image.
+      }},
+      function(err, vendor){
+      if(err){
+        console.log('error updating');
+      } else {
+        console.log(req.file.filename)
+        console.log(vendor);
+        res.send(vendor);
+      }
+    })
+});
+/*** End upload middleware *******/
 
 router.get('/', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
@@ -123,7 +153,7 @@ router.param('vendor', function(req, res, next, id) {
 });
 
 router.get('/api/vendor/:vendor', function(req, res, next){   
-  res.json(req.vendor)
+  res.json(req.vendor);
 });
 
 router.put('/api/vendor/:vendor', function(req, res){
@@ -145,6 +175,20 @@ router.put('/api/vendor/:vendor', function(req, res){
         }
     }
   )
+})
+
+router.put('/api/vendor/:vendor/gallery/', function(req, res){
+  vendor = req.vendor;
+  console.log("calling" + vendor);
+
+ vendor.gallery.push({name: req.body.galleryName});
+  
+  vendor.save(function(err, vendor){
+    if(err){return next(err);}
+
+    res.json(vendor);
+    console.log(vendor);
+  })
 })
 
 module.exports = router;
