@@ -43,6 +43,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/home', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
 router.get('/profile/api/guests', auth, function(req, res, next){
   Guest.find({"user": req.payload._id}).exec(function(err,guests){
     if(err){return next(err); }

@@ -20,26 +20,42 @@
 				<input type="text" class="form-control" placeholder="id" ng-model="vendor._id">
 				<input type="text" class="form-control" placeholder="avatar" ng-model="vendor.avatar">
 				<select name='category' ng-model="vendor.category">
-					<option ng-repeat="o in categories" placeholder="category">{{o}}</option>
+					<option ng-repeat="category in categories" placeholder="category">{{category}}</option>
 				</select>
 	
 				<button type="submit" class="btn btn-primary">Update</button>
 				
 			</div>
 		</form>
+		<br><br>
 		
-		<br><br>
-		<h2> Upload Profile Picture </h2>
+		<!--********** Avatar Picture **************-->
+		<h2> Profile Picture </h2>
 		<input type="file" file-model="myFile"/>
-		<button ng-click="uploadProfilePic()">Upload</button>
+		<button ng-click="uploadAvatarPic()">Upload Profile</button>
+		<br>
+		<img ng-src="/public/images/vendor/avatar/{{vendor.avatar}}" />
+		<br>
+		<br>
 
-		<br><br>
+		<!--********** Showcase Picture **************-->
+		<h2> Showcase Pictures </h2>
+		<input type="file" file-model="myFile" />
+		<button ng-click="uploadShowcasePic()">Upload Image</button>
+		<br>
+		
+		<div ng-repeat = "image in vendor.image">
+			<img ng-src="/public/images/vendor/showcase/{{image.path}}"
+		</div>
 
-		<div ng-repeat="gallery in vendor.gallery">
+
+
+
+		<!--<div ng-repeat="gallery in vendor.gallery">
 			<h3>{{gallery.name}}<h3>
 				<h4>Upload Image </h4>
 					<input type="file" file-model="myFile"/>
-					<button ng-click="uploadGalleryImage()">Upload</button>
+					<button ng-click="uploadShowcasePic()">Upload</button>
 			<div ng-repeat="image in gallery.images">
 				{{image.url}}
 			</div>
@@ -53,7 +69,7 @@
 				
 				<button type="submit" class="btn btn-primary">Update</button>
 			</div>
-		</form>
+		</form> -->
 
 	</div>
 	

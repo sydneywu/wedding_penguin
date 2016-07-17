@@ -118,10 +118,10 @@ vendorApp.controller('VendorProfileCtrl',[
 			getVendor();
 		};
 
-		$scope.uploadProfilePic = function(){
+		$scope.uploadAvatarPic = function(){
 
 	        var file = $scope.myFile;
-	        var uploadURL = "photos/upload/";
+	        var uploadURL = "photos/avatar/";
 	        var fd = new FormData();
 	        fd.append('file', file);
 
@@ -129,10 +129,10 @@ vendorApp.controller('VendorProfileCtrl',[
 
 	    };
 
-	   	$scope.uploadProfilePic = function(){
+	   	$scope.uploadShowcasePic = function(){
 
 	        var file = $scope.myFile;
-	        var uploadURL = "photos/gallery/";
+	        var uploadURL = "photos/showcase/";
 	        var fd = new FormData();
 	        fd.append('file', file);
 

@@ -1,7 +1,6 @@
 var express = require('express');
 var jwt = require('express-jwt');
 var router = express.Router();
-var auth = jwt({secret: 'SECRET', userProperty:'payload'})
 
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -9,35 +8,77 @@ var passport = require('passport');
 var Guest = mongoose.model('Guest');
 var User = mongoose.model('User');
 
+/***************** Authentication Middleware ***************/
+var auth = jwt({secret: 'SECRET', requestProperty:'payload'})
 
+function isAuthenticated(req,res,next){
+  if(req.payload.authenticated){return next();}
+  res.redirect('home')
+}
 
-router.get('/',function(req,res,next){
+router.get('/',
+  auth, 
+  function(req,res,next){
   res.render('guests', {title: 'Guests' })
 })
 
-/* Guests page. */
-
-
-router.get('/api/guests', auth, function(req, res, next){
-  console.log(req.payload._id)
-  Guest.find({"user": req.payload._id}).exec(function(err,guests){
-    if(err){return next(err); }
-    res.json(guests);
-  })
+router.use(function(err, req, res, next) {
+  if(401 == err.status) {
+      console.log('/home')
+      res.redirect('/home')
+  }
 });
 
-router.post('/api/guests', auth, function(req,res,next){
-  var query = User.findById(req.body.user);
-
-  query.exec(function (err, user){
-    if (err) { return next(err); }
-    if (!user) { return next(new Error('can\'t find user')); }
-    req.user = user;
-    return next();
-  });
-
-
+/* Guests page. */
+router.get('/api/guests',
+  auth, 
+  function(req,res,next){
+    var user= req.payload;
+    console.dir("user id is" + JSON.stringify(user));
+    if(!req.payload.username) return res.redirect('home'); 
+    next();
 })
+
+
+
+router.get('/api/guests', 
+/*  auth,*/
+  function(req, res, next){;
+    console.log(req.payload._id);
+    Guest.find({"user": req.payload._id}).exec(function(err,guests){
+      if(err){return next(err); }
+      res.json(guests);
+    })
+  }
+);
+
+
+
+router.get('/api/guests', 
+  auth,
+  function(req, res, next){
+    console.log("auth is " + auth);
+    console.log(req.payload._id);
+    Guest.find({"user": req.payload._id}).exec(function(err,guests){
+      if(err){return next(err); }
+      res.json(guests);
+    })
+  }
+);
+
+router.post('/api/guests', 
+  auth, 
+  function(req,res,next){
+      var query = User.findById(req.body.user);
+
+      query.exec(function (err, user){
+        if (err) { return next(err); }
+        if (!user) { return next(new Error('can\'t find user')); }
+        req.user = user;
+        return next();
+      });
+  }
+)
 
 router.post('/api/guests', auth, function(req, res, next) {
   var guest = new Guest(req.body);

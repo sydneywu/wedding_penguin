@@ -7,73 +7,8 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var Vendor = mongoose.model('Vendor');
 
-/******* Picture Upload Middleware ************/
-var multer = require('multer');
-
-router.post('/photos/upload', 
-  auth, 
-  multer({                                          // multer middleware
-    storage: multer.diskStorage({
-      destination: function(req, file, cb){
-        cb(null, './public/images/vendor/upload')
-      },
-      filename: function (req, file, cb){
-        cb(null, 'profile' + '-' + Date.now()+'.jpg' )
-      }
-    })  
-  }).single('file'),
-  function(req,res){
-    console.log(req.payload._id);
-    console.log(req.file.filename)
-    
-    Vendor.findOneAndUpdate(
-      {_id: req.payload._id}, 
-      {$set: {
-        avatar: req.file.filename
-      }},
-      function(err, vendor){
-      if(err){
-        console.log('error updating');
-      } else {
-        console.log(req.file.filename)
-        console.log(vendor);
-        res.send(vendor);
-      }
-    })
-});
-
-router.post('/photos/upload', 
-  auth, 
-  multer({                                          // multer middleware
-    storage: multer.diskStorage({
-      destination: function(req, file, cb){
-        cb(null, './public/images/vendor/gallery')
-      },
-      filename: function (req, file, cb){
-        cb(null, 'image' + '-' + Date.now()+'.jpg' )
-      }
-    })  
-  }).single('file'),
-  function(req,res){
-    console.log(req.payload._id);
-    console.log(req.file.filename)
-    
-    Vendor.findOneAndUpdate(
-      {_id: req.payload._id}, 
-      {$set: {
-        avatar: req.file.filename         //issue: need to push into gallery.image.
-      }},
-      function(err, vendor){
-      if(err){
-        console.log('error updating');
-      } else {
-        console.log(req.file.filename)
-        console.log(vendor);
-        res.send(vendor);
-      }
-    })
-});
-/*** End upload middleware *******/
+var multer = require('multer'); //middleware for image upload
+var lwip = require('lwip');
 
 router.get('/', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
@@ -177,18 +112,98 @@ router.put('/api/vendor/:vendor', function(req, res){
   )
 })
 
-router.put('/api/vendor/:vendor/gallery/', function(req, res){
-  vendor = req.vendor;
-  console.log("calling" + vendor);
+/******* Picture Upload Middleware ************/
+function saveImageName(req, res, updatedObj){  //callback function for findOneAndUpdate
+  Vendor.findOneAndUpdate(
+    {_id: req.payload._id}, 
+    updatedObj,     // e.g. {"$set": {"avatar": value}}
+    function(err, vendor){
+      if(err){
+        console.log('error updating');
+      } else {
+        console.log(vendor);
+        res.send(vendor);
+      }
+    }
+  )
+}
 
- vendor.gallery.push({name: req.body.galleryName});
-  
-  vendor.save(function(err, vendor){
-    if(err){return next(err);}
+/******************** Upload Images********************/
+  router.post('/photos/avatar', 
+    auth, 
+    multer({   // multer middleware
+      storage: multer.diskStorage({
+        destination: function(req, file, cb){
+          cb(null, './public/images/vendor/avatar')
+        },
+        filename: function (req, file, cb){
+          cb(null, 'profile' + '-' + Date.now()+'.jpg' )
+        }
+      })  
+    }).single('file'),
+    function(req,res){
+      console.log(req.file.path)
+      lwip.open(req.file.path, function(err, image){
+          console.log(req.file.path)
+          console.log(image)
+/*        image.batch()
+          .resize(640)
+          .writeFile('output.jpg', function(err){
+            if(err){
+              response.status(400).send({error: err.toString()});
+            } else {
+              response.status(200).end();
+            }
+          })*/
+      })
 
-    res.json(vendor);
-    console.log(vendor);
-  })
-})
+      var updatedObj={$set: {avatar: req.file.filename}}; //set the update object
+      saveImageName(req, res, updatedObj); //cb method to findOneAndUpdate
+    }
+  );
+
+  /**** Upload showcase Picture****/
+  router.post('/photos/showcase', 
+    auth, 
+    multer({  // multer middleware
+      storage: multer.diskStorage({
+        destination: function(req, file, cb){
+          cb(null, './public/images/vendor/showcase')
+        },
+        filename: function (req, file, cb){
+          cb(null, 'image' + '-' + Date.now()+'.jpg' )
+        }
+      })  
+    }).single('file'),
+    function(req,res){
+      var updateObj={$push:{image:{path: req.file.filename}}}; //set the update object. nested obj 3 levels deep
+      saveImageName(req, res, updatedObj); //cb method to findOneAndUpdate
+  });
+
+/*** End upload middleware *******/
+
+  router.get('/testee',
+    function(req,res){
+      console.log('test');
+      res.send('hello');
+
+      lwip.open('public/images/vendor/avatar/inpu.jpg', function(err, image){
+
+          console.log('image is ' + image)
+          image.batch()
+          .resize(640)
+          .writeFile('output.jpg', function(err){
+            if(err){
+              response.status(400).send({error: err.toString()});
+            } else {
+              response.status(200).end();
+            }
+          })
+      })
+
+    }
+  )
+
+
 
 module.exports = router;
