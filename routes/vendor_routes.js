@@ -8,7 +8,8 @@ var passport = require('passport');
 var Vendor = mongoose.model('Vendor');
 
 var multer = require('multer'); //middleware for image upload
-var lwip = require('lwip');
+var sharp = require('sharp'); //middleware for image resize
+var fs = require('fs');
 
 router.get('/', function(req,res,next){
 	res.render('vendor/login', {title:'Vendor Admin'})
@@ -137,25 +138,27 @@ function saveImageName(req, res, updatedObj){  //callback function for findOneAn
           cb(null, './public/images/vendor/avatar')
         },
         filename: function (req, file, cb){
-          cb(null, 'profile' + '-' + Date.now()+'.jpg' )
+          cb(null, 'profile' + '-' + Date.now() )
         }
       })  
     }).single('file'),
     function(req,res){
-      console.log(req.file.path)
-      lwip.open(req.file.path, function(err, image){
-          console.log(req.file.path)
-          console.log(image)
-/*        image.batch()
-          .resize(640)
-          .writeFile('output.jpg', function(err){
-            if(err){
-              response.status(400).send({error: err.toString()});
-            } else {
-              response.status(200).end();
-            }
-          })*/
+      var path = "./public/images/vendor/avatar";
+      console.log("file path is " + req.file.path);
+      
+      fs.access(req.file.path, fs.F_OK, function(err){    //function to call to check if file exists and log to console. Doesn't do anything 
+        if(!err){
+          console.log('file exists');
+        } else{
+          console.log('file does not exist')
+        }
       })
+
+      sharp(req.file.path)
+        .resize(100,100)
+        .toFile(req.file.path + '_r', function(err){
+            if(err){ throw err; }
+        })
 
       var updatedObj={$set: {avatar: req.file.filename}}; //set the update object
       saveImageName(req, res, updatedObj); //cb method to findOneAndUpdate
@@ -171,35 +174,29 @@ function saveImageName(req, res, updatedObj){  //callback function for findOneAn
           cb(null, './public/images/vendor/showcase')
         },
         filename: function (req, file, cb){
-          cb(null, 'image' + '-' + Date.now()+'.jpg' )
+          cb(null, 'image' + '-' + Date.now() )
         }
       })  
     }).single('file'),
     function(req,res){
-      var updateObj={$push:{image:{path: req.file.filename}}}; //set the update object. nested obj 3 levels deep
+      console.log(req.file.filename);
+      console.log(req.payload._id)
+      var updatedObj={$push:{image:{path: req.file.filename}}}; //set the update object. nested obj 3 levels deep
       saveImageName(req, res, updatedObj); //cb method to findOneAndUpdate
   });
 
 /*** End upload middleware *******/
 
-  router.get('/testee',
-    function(req,res){
+  router.get('/testing', function(req,res){
+      var path = 'public/images/vendor/avatar/input5.jpg';
+
       console.log('test');
+      sharp('public/images/vendor/avatar/input3.jpg')
+        .resize(100,100)
+        .toFile('public/images/vendor/avatar/output3.jpg', function(err){
+
+        })
       res.send('hello');
-
-      lwip.open('public/images/vendor/avatar/inpu.jpg', function(err, image){
-
-          console.log('image is ' + image)
-          image.batch()
-          .resize(640)
-          .writeFile('output.jpg', function(err){
-            if(err){
-              response.status(400).send({error: err.toString()});
-            } else {
-              response.status(200).end();
-            }
-          })
-      })
 
     }
   )

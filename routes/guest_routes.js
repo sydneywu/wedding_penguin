@@ -11,23 +11,20 @@ var User = mongoose.model('User');
 /***************** Authentication Middleware ***************/
 var auth = jwt({secret: 'SECRET', requestProperty:'payload'})
 
-function isAuthenticated(req,res,next){
-  if(req.payload.authenticated){return next();}
-  res.redirect('home')
-}
 
 router.get('/',
-  auth, 
+  //auth, 
   function(req,res,next){
+  console.log('I am here');
   res.render('guests', {title: 'Guests' })
 })
 
-router.use(function(err, req, res, next) {
+/*router.use(function(err, req, res, next) {
   if(401 == err.status) {
-      console.log('/home')
-      res.redirect('/home')
+      //console.log('/home')
+      //res.redirect('/home')
   }
-});
+});*/
 
 /* Guests page. */
 router.get('/api/guests',
@@ -35,14 +32,14 @@ router.get('/api/guests',
   function(req,res,next){
     var user= req.payload;
     console.dir("user id is" + JSON.stringify(user));
-    if(!req.payload.username) return res.redirect('home'); 
+    //if(!req.payload.username) return res.redirect('home'); 
     next();
 })
 
 
 
 router.get('/api/guests', 
-/*  auth,*/
+  auth,
   function(req, res, next){;
     console.log(req.payload._id);
     Guest.find({"user": req.payload._id}).exec(function(err,guests){

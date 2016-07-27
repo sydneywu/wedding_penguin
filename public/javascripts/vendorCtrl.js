@@ -5,42 +5,6 @@ vendorApp = angular.module('WeddingVendor', [
 	'angular.filter', 
 	'ngResource']);
 
-vendorApp.config([
-	'$stateProvider',
-	'$urlRouterProvider',
-	'$locationProvider',
-	function($stateProvider, $urlRouterProvider, $locationProvider){
-	  $stateProvider
-		.state('profile', {
-					url: '/profile',					// use id to display individual records
-					templateUrl: '/vendor/profile.html',
-					controller: 'MainCtrl',
-
-			})
-
-		.state('login', {
-			url: '/login',
-			templateUrl: '/login.html',
-			controller: 'AuthCtrl',
-			onEnter: ['$state', 'authFactory', function($state, authFactory){
-				if (authFactory.isLoggedIn()){
-					$state.go('profile');
-				}
-			}]
-		})
-
-		.state('register', {
-				url: '/register',
-				templateUrl: '/register.html',
-				controller: 'AuthCtrl',
-				onEnter: ['$state', 'authFactory', function($state, authFactory){
-				if (authFactory.isLoggedIn()){
-					$state.go('profile');
-				}
-			}]
-		})
-}]);
-
 vendorApp.controller('VendorNavCtrl'),[
 	'$scope',
 	'vendorFactory',
@@ -59,7 +23,7 @@ vendorApp.controller('VendorCtrl',[
 	'$window',
 	function($scope, $state, vendorFactory, $http, $window){
 		
-		$scope.vendor = {};
+		/*$scope.vendor = {};*/
 
 		$scope.register = function(){
 			vendorFactory.register($scope.vendor).error(function(error){
@@ -120,7 +84,7 @@ vendorApp.controller('VendorProfileCtrl',[
 
 		$scope.uploadAvatarPic = function(){
 
-	        var file = $scope.myFile;
+	        var file = $scope.myFile;	//use the directive fileModel to bind the file
 	        var uploadURL = "photos/avatar/";
 	        var fd = new FormData();
 	        fd.append('file', file);
@@ -131,7 +95,7 @@ vendorApp.controller('VendorProfileCtrl',[
 
 	   	$scope.uploadShowcasePic = function(){
 
-	        var file = $scope.myFile;
+	        var file = $scope.myFile;	//use the directive fileModel to bind the file
 	        var uploadURL = "photos/showcase/";
 	        var fd = new FormData();
 	        fd.append('file', file);
@@ -142,8 +106,9 @@ vendorApp.controller('VendorProfileCtrl',[
 
 }]);
 
+/* Directive to bind image files to variables to the controller. NG-model not working for type=myfile */
 angular.module('WeddingVendor').directive('fileModel', ['$parse', function ($parse) {
-return {
+return {			
     restrict: 'A',
     link: function(scope, element, attrs) {
         var model = $parse(attrs.fileModel);
