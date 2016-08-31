@@ -1,0 +1,38 @@
+
+<script type="text/ng-template" id="guest_details.html">
+	
+
+	    <div class="modal-header">
+	            <h3 class="modal-title">Guest info</h3>
+	    </div>
+
+	    <div class="modal-body">
+
+		    <form ng-submit="updateGuest()">
+				<h3>Update guest</h3>
+			
+
+	        
+				<div class="form-group">
+				
+					<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guest.name">
+					
+					<input type="text" class="form-control" placeholder="Relation" ng-model="guest.relation">
+
+					<input type="text" class="form-control" placeholder="Table" ng-model="guest.table">
+
+					<input type="text" class="form-control" placeholder="User ID" ng-model="guest.user">
+				
+					<button type="submit" class="btn btn-primary">Update</button>
+		
+				</div>
+			</form>
+
+			<a ng-click="deleteGuest()" class ="btn btn-primary btn-small"> Delete Guest </a>
+		</div>
+
+		<div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+        </div>
+
+</script>

@@ -27,15 +27,14 @@ router.get('/',
 });*/
 
 /* Guests page. */
-router.get('/api/guests',
+/*router.get('/api/guests',     //use for checking the authentication of user. Incomplete.
   auth, 
   function(req,res,next){
     var user= req.payload;
     console.dir("user id is" + JSON.stringify(user));
     //if(!req.payload.username) return res.redirect('home'); 
     next();
-})
-
+})*/
 
 
 router.get('/api/guests', 
@@ -49,19 +48,50 @@ router.get('/api/guests',
   }
 );
 
-
-
-router.get('/api/guests', 
+router.get('/api/tables', 
   auth,
   function(req, res, next){
-    console.log("auth is " + auth);
-    console.log(req.payload._id);
-    Guest.find({"user": req.payload._id}).exec(function(err,guests){
-      if(err){return next(err); }
-      res.json(guests);
-    })
-  }
-);
+    
+    var query = User.findById(req.payload._id);
+
+    query.exec(function (err, user){
+      if (err) { return next(err); }
+      if (!user) { return next(new Error('can\'t find user')); }
+     
+      queriedUser = user;
+      res.json(user.table);
+    });
+})
+
+router.post('/api/tables', 
+  auth,
+  function(req, res, next){
+
+    console.log(req.payload._id);     //test to see if user id is passed here
+    var query = User.findById(req.payload._id);   //query will return a query object which needs to be exec
+
+    query.exec(function (err, user){
+      if (err) { return next(err); }
+      if (!user) { return next(new Error('can\'t find user')); }
+      queriedUser = user;             //assigned user object to new variable
+    });
+
+    console.log("user is " + queriedUser);  //test new variable
+
+    User.findOneAndUpdate(              
+      {_id: req.payload._id}, 
+      {"$set":{"table":req.body}},     // e.g. {"$set": {"avatar": value}}
+      {upsert:true},        // replace or create new if don't exist
+      function(err, user){
+        if(err){
+          console.log('error updating');
+        } else {
+          console.log(user);
+        }
+      }
+    )
+})
+
 
 router.post('/api/guests', 
   auth, 

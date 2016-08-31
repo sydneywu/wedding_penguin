@@ -2,140 +2,33 @@
 <html lang="en">
 
 <head>
-  <% include partials/_head_main_script.ejs %>
-  <% include partials/_head_home_script.ejs %>
-
+  	<% include partials/_head_main_script.ejs %>
+  	<% include partials/_head_home_script.ejs %>
+	
 </head>
 
 <body ng-app="WeddingPenguin">
 	<div class="container" ng-controller="MainCtrl">
-	
+		
 		<% include partials/_header.ejs %>
-		<ui-view></ui-view>
+		<% include guest_partials/_guest_details.ejs %><!--load modal for guest-->
+		<% include guest_partials/_table_settings.ejs %><!--load modal for table-->
 
 	</div><!--end container-->
 
 	<div class="page-header clear">
 		<h1>Guest View</h1>
 	</div>
-
-	<div class="left-bar col-sm-4" ng-controller="GuestsCtrl">
-			
-			<form ng-submit="addGuest()">
-				<h3>Add a new guest</h3>
-				<div class="form-group">
-				
-					<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guestName">
-					
-					<input type="text" class="form-control" placeholder="Relation" ng-model="guestRelation">
-
-					<select name='table' ng-model="guestTable">
-						<option ng-repeat="i in getNumber(totalTables) track by $index"> {{$index+1}}</option>
-					</select>
-
-					<input type="text" class="form-control" placeholder="User" ng-model="guestUser">
-
-				
-					<button type="submit" class="btn btn-primary">Add</button>
-				
-				</div>
-			</form>
-			<button type="submit" ng-click="open()"class="btn btn-primary">Number of Tables</button>
-	</div>
-		
-		
-	<div class="right-bar col-sm-8" ng-controller="GuestsCtrl">
-
-			<div ng-repeat="(key, value) in (guests| groupBy: 'table')">
-					<h5> Table {{key}} </h5>
-					<table class="table table-bordered table-responsive">
-						<tr>
-							<th style="width: 80px;"> Name </th>
-							<th style="width: 20px;"> Table </th>
-							<th style="width: 80px;"> Relation </th>
-							<th style="width: 40px"></th>
-							<th style="width: 40px"></th>
-						</tr>
-						<tr ng-repeat="guest in value">
-							<td style="width: 80px;"><a href="#/guests/{{guest._id}}">{{guest.name}}</a></td>
-							<td style="width: 20px;">{{guest.table}}</td>
-							<td style="width: 80px;">{{guest.relation}}</td>
-							<td><a ng-click="editGuest(guest)" class="btn btn-small btn-primary">edit</a></td>
-							<td><a ng-click="deleteGuest(guest.id)" class="btn btn-small btn-primary">delete</a></td>
-						</tr>
-						<br>
-					</table>
-				
-			</div>
-
-	</div>
-
-	<script type="text/ng-template" id="guest_details.html">
-		
-		    <h1>Guest detail</h1>
-
-		    <div class="modal-header">
-		            <h3 class="modal-title">Guest Details</h3>
-		    </div>
-
-		    <div class="modal-body">
-
-			    <form ng-submit="updateGuest()">
-					<h3>Update new guest</h3>
-				
-
-		        
-					<div class="form-group">
-					
-						<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guest.name">
-						
-						<input type="text" class="form-control" placeholder="Relation" ng-model="guest.relation">
-
-						<input type="text" class="form-control" placeholder="Table" ng-model="guest.table">
-
-						<input type="text" class="form-control" placeholder="User ID" ng-model="guest.user">
-					
-						<button type="submit" class="btn btn-primary">Update</button>
-			
-					</div>
-				</form>
 	
-				<a ng-click="deleteGuest()" class ="btn btn-primary btn-small"> Delete Guest </a>
-			</div>
-
-			<div class="modal-footer">
-	            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-	            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-	        </div>
-
-	</script>
-
-	<div ng-controller="ModalDemoCtrl">
-	    <script type="text/ng-template" id="myModalContent.html">
-	        <div class="modal-header">
-	            <h3 class="modal-title">Im a modal!</h3>
-	        </div>
-	        <div class="modal-body">
-	            <ul>
-	                <li ng-repeat="item in items">
-	                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-	                </li>
-	            </ul>
-	            Selected: <b>{{ selected.item }}</b>
-	        </div>
-	        <div class="modal-footer">
-	            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-	            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-	        </div>
-	    </script>
-
-	    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-	    <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
-	    <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
-	    <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
-	    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+	
+	<div class="left-bar col-sm-4">
+		<% include guest_partials/_add_guest_script.ejs %>
 	</div>
-
+		
+		
+	<div class="right-bar col-sm-8">
+		<% include guest_partials/_display_guests_script.ejs %>
+	</div>
 
 </body>
 </html>

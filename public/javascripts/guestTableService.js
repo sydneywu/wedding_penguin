@@ -1,25 +1,31 @@
-angular.module("WeddingPenguin").factory('guestsFactory',[
+angular.module("WeddingPenguin").factory('guestTablesFactory',[
 	'$http', 
 	'authFactory',
 	'authInterceptor', 
 	function($http, authFactory, authInterceptor){
-		var o = { guests: [], };
+		var o = { tables: [], };
 
 		o.getAll = function(){
-			return $http.get('guests/api/guests', authInterceptor).success(function(data){
-				angular.copy(data, o.guests);
+			return $http.get('guests/api/tables', authInterceptor).success(function(data){
+				angular.copy(data, o.tables);
 			})
 		}
 
-		o.create = function(guest){
-			return $http.post('guests/api/guests', guest, authInterceptor).success(function(data){
-		  		o.guests.push(data);
+		o.create = function(table){
+			return $http.post('guests/api/tables', table, authInterceptor).success(function(data){
+		  		o.tables.push(data);
 		  	});
-
 		};
 
-		o.get = function(id){
-			return $http.get('guests/api/guest/'+id, authInterceptor).then(function(res){
+		o.update = function(table){
+			return $http.post('guests/api/tables', table)
+				.success(function(data){
+					console.log('table updated')
+				})
+		}
+
+/*		o.get = function(id){
+			return $http.get('guests/api/tables/'+id, authInterceptor).then(function(res){
 				//angular.copy(data, o.guest);
 				return res.data;
 			})
@@ -32,7 +38,7 @@ angular.module("WeddingPenguin").factory('guestsFactory',[
 				});
 		};
 
-		o.update = function(guest, data1){
+		o.update1= function(guest, data1){
 			return $http.put('guests/api/guest/' + guest._id, data1)
 				.success(function(data){
 					console.log('guest updated')
@@ -45,6 +51,6 @@ angular.module("WeddingPenguin").factory('guestsFactory',[
 					console.log('guest deleted')
 				})
 		}
-
+*/
 		return o;
 }])

@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');			//node default tool
 var jwt = require('jsonwebtoken');		//npm install jsonwebtoken --save
 
+var tableSchema = new mongoose.Schema({     
+  number: Number,
+  name: {type: String, default: ""},
+})  
+
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
   hash: String,
@@ -9,10 +14,10 @@ var UserSchema = new mongoose.Schema({
   guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }],
   checklists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Checklist' }],
   budget: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Budget' }],
+  table: [tableSchema]
 });
 
-
-
+ 
 UserSchema.methods.setPassword = function(password){
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');

@@ -1,0 +1,35 @@
+<div ng-controller="GuestsCtrl">
+	
+<!--************* This section searches guest or sort them *********-->
+	<label>Search: <input ng-model="searchText"></label>
+	<label>Sort by: </label>
+	<select ng-init="sortGuestBy=guestSorter[0]" ng-model="sortGuestBy" ng-options="item for item in guestSorter"></select>
+	<!-- This is angular way to display select/dropdown. ng-init will initialize the default value. ng-model's value will be use later for filter in ng-repeat. ng-options generate the items in the array.-->
+	
+<!--************* This section displays the guests *********-->	
+	<div ng-repeat="group in guests| filter: searchText | groupBy: sortGuestBy | toArray: true | orderBy: '$key' "><!-- filter works with the above search field. groupBy will work with the above select/dropdown list. toArray converts the keys to array. orderBy: $key will sort the key in order. -->
+			
+		<h5 class="inline-block"> {{group.$key}} </h5>
+		<h5 class="inline-block" ng-if="sortGuestBy == 'table' "> {{matchTable(group.$key)}} </h5><!--this element will only be show if ng-if is evaluated to be true-->
+		
+		<table class="table table-bordered table-responsive">
+			<tr>
+				<th style="width: 80px;"> Name </th>
+				<th style="width: 20px;"> Table </th>
+				<th style="width: 80px;"> Relation </th>
+				<th style="width: 40px"></th>
+				<th style="width: 40px"></th>
+			</tr>
+			
+			<tr ng-repeat="guest in group">
+				<td style="width: 80px;"><a href="#/guests/{{guest._id}}">{{guest.name}}</a></td>
+				<td style="width: 20px;">{{guest.table}}</td>
+				<td style="width: 80px;">{{guest.relation}}</td>
+				<td><a ng-click="editGuest(guest)" class="btn btn-small btn-primary">edit</a></td>
+				<td><a ng-click="deleteGuest(guest.id)" class="btn btn-small btn-primary">delete</a></td>
+			</tr>
+			
+			<br>
+		</table>
+	</div>
+</div>

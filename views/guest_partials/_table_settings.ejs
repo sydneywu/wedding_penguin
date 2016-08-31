@@ -1,0 +1,30 @@
+
+<script type="text/ng-template" id="table_settings.html">
+	
+	    <div class="modal-header">
+	         <h3 class="modal-title">Table Settings</h3>
+	    </div>
+
+	    <div class="modal-body">
+
+	    	{{tables}}
+
+	    <a ng-click="addTable()" class="btn btn-small btn-primary">Add Table</a>
+
+	    <form ng-submit="setTableNo()">
+			<h3>Set Table Number</h3>
+			<div class="form-group">
+			
+				<input type="text" class="form-control" placeholder="Input number 1 - 500" ng-model="userTableNo">
+			
+				<button type="submit" class="btn btn-primary">Set</button>
+			
+			</div>
+		</form>
+		    
+
+		<div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="close()">close</button>
+        </div>
+
+</script>

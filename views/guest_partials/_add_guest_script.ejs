@@ -1,0 +1,22 @@
+<div ng-controller="GuestsCtrl">	
+	<form ng-submit="addGuest()">
+		<h3>Add a new guest</h3>
+		<div class="form-group">
+		
+			<input type="text" class="form-control" placeholder="Guest's Name" ng-model="guestName">
+			
+			<input type="text" class="form-control" placeholder="Relation" ng-model="guestRelation">
+
+			<select name='table' ng-model="guestTable">
+				<option ng-repeat="i in getNumber(totalTables) track by $index"> {{$index+1}}</option>
+			</select>
+
+			<input type="text" class="form-control" placeholder="User" ng-model="guestUser">
+
+		
+			<button type="submit" class="btn btn-primary">Add</button>
+		
+		</div>
+	</form>
+	<a ng-click="tableSettings()" class="btn btn-small btn-primary">Table Settings</a>
+</div>
