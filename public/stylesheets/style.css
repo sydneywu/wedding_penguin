@@ -8,25 +8,32 @@ body {
 	a { color: #00B7FF;}
 	
 	/*Common Class*/
-	.clear{ clear: both; }
-	.margin-top-10{margin-top:10px;}
-	.margin-top-20{margin-top:20px;}
-	.margin-top-30{margin-top:30px;}
-	.margin-top-40{margin-top:40px;}
-	.margin-top-50{margin-top:50px;}
-	.margin-top-60{margin-top:60px;}
-	.margin-top-70{margin-top:70px;}
-	.margin-top-80{margin-top:80px;}
-	
-	.padding-top-10{padding-top:10px;}
-	.padding-top-20{padding-top:20px;}
-	.padding-top-30{padding-top:30px;}
-	.padding-top-40{padding-top:40px;}
-	.padding-top-50{padding-top:50px;}
-	
-	.border-grey-thin{border-style: solid; border-width: 1px; border-color: #999;}
+		/* Color */
+		.bg-black{background-color: black;}
+		.bg-grey{background-color: #888;}
+		.bg-white{background-color: white;}
 
-	.inline-block{display: inline-block;}
+		.clear{ clear: both; }
+		.margin-top-10{margin-top:10px;}
+		.margin-top-20{margin-top:20px;}
+		.margin-top-30{margin-top:30px;}
+		.margin-top-40{margin-top:40px;}
+		.margin-top-50{margin-top:50px;}
+		.margin-top-60{margin-top:60px;}
+		.margin-top-70{margin-top:70px;}
+		.margin-top-80{margin-top:80px;}
+		
+		.padding-top-10{padding-top:10px;}
+		.padding-top-20{padding-top:20px;}
+		.padding-top-30{padding-top:30px;}
+		.padding-top-40{padding-top:40px;}
+		.padding-top-50{padding-top:50px;}
+		
+		.border-grey-thin{border-style: solid; border-width: 1px; border-color: #999;}
+
+		.inline-block{display: inline-block;}
+
+
 
 /******* Header and Nav **********/
 	#header{width: full; background-color: #fff;}
@@ -36,6 +43,7 @@ body {
 
 	/*Nav*/
 		.navbar-nav>li>a{padding: 5px 10px 5px 10px;}
+		.nav-li-padding{padding: 4px 10px 5px 10px;}
 
 		#profile-menu{float: right;	margin: 0 0 0 0;}
 			#profile-menu a{color: #999; font-size: 0.8em;}
@@ -47,6 +55,39 @@ body {
 			padding-top: 0;
 		}
 			#main-menu a{color: #999; font-size: 0.9em;}
+
+		/* Dropdown for main menu */
+			.dropbtn{cursor: pointer;}
+
+			.dropdown{
+				position: relative;
+				display: inline-block;
+			}
+
+			.dropdown-content{
+				display: none;
+				position: absolute;
+				background-color: #f9f9f9;
+				min-width: 120px;
+				
+			}
+			
+			.dropdown-content a{
+				color: black;
+				padding: 10px 12px;
+				text-decoration: none;
+				display: block;
+			}
+
+			.dropdown:hover .dropdown-content{display:block;}
+			
+			.dropdown:hover .dropbtn{background-color: #ddd;}
+
+			.dropdown-content a:hover{background-color: #ddd}
+
+
+
+
 
 		#header-divider{
 			width: 100%;

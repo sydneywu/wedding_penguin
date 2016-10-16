@@ -24,14 +24,16 @@ angular.module("WeddingPenguin").factory('guestTablesFactory',[
 				})
 		}
 
-/*		o.get = function(id){
-			return $http.get('guests/api/tables/'+id, authInterceptor).then(function(res){
+		o.get = function(id){
+			
+			
+			return $http.get('guests/api/tables/57c483b0068c8c2437ef69d2', authInterceptor).then(function(res){
 				//angular.copy(data, o.guest);
 				return res.data;
 			})
 		}
 
-		o.change = function(guest){
+/*		o.change = function(guest){
 			return $http.put('guests/api/guest/' + guest._id + '/change')
 				.success(function(data){
 					guest.relation = 'num';

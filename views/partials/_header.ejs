@@ -17,7 +17,17 @@
 		<nav id="main-menu" class="clear" ng-controller="NavCtrl">
 		    <ul class="nav navbar-nav">
 			    <li><a href="/home">HOME</a></li>
-			    <li><a href="/login">WEDDING TOOLS</a></li>
+			    
+			    <li class="dropbtn">
+			    	<div class="dropdown nav-li-padding">
+						<a class="dropbtn ">WEDDING TOOLS</a>
+						<div class="dropdown-content">
+							<a href="/guests">Guest List</a>
+							<a href="/todos">Todo List</a>
+						</div>
+			    	</div>
+			    </li>
+
 			    <li><a href="/website">CREATE WEBSITE</a></li>
 			    <li><a href="/red_packet">RED PACKET</a></li>
 			    <li><a href="/articles">ARTICLES</a></li>

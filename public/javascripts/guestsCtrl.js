@@ -1,12 +1,68 @@
-angular.module('WeddingPenguin').controller('GuestsCtrl', [
+angular.module('WeddingPenguin').controller('GuestsCtrl', guestsCtrl)
+
+guestsCtrl.$inject = [
 	'$scope',
 	'$q',
+	'$window',
 	'$stateParams',
 	'$uibModal',
 	'guestsFactory',
 	'guestTablesFactory',
 	'authFactory',
-	function($scope, $q, $stateParams, $uibModal, guestsFactory, guestTablesFactory, authFactory){
+]
+
+function guestsCtrl(
+	$scope, 
+	$q, 
+	$window, 
+	stateParams, 
+	$uibModal, 
+	guestsFactory, 
+	guestTablesFactory, 
+	authFactory){
+
+		init();
+		$scope.participants = guestsFactory.participants;
+
+		
+		function init(){
+			
+			authFactory.hasToken(); //Check to see if user is logged in
+			
+			guestsFactory.getAllParticipants("participants");
+
+			guestsFactory.createParticipant(
+				"participant",			//url
+				{						//data
+					name: "test3",
+					relation: "testRelation",
+					table: 1
+				}
+			)
+
+			console.log(guestsFactory.participants);
+/*			guestsFactory.updateParticipant(
+				"participant",			//url
+				"57dc15820f14667c3d575227",
+				{						//data
+					_id: "57dc15820f14667c3d575227",
+					name: "testPeter",
+					relation: "testRelation",
+					table: 11,
+				}
+			)
+*/
+/*			guestsFactory.deleteParticipant(
+				"participant",
+				"57de2d055b4dbabc27472e70"
+			)*/
+		
+		}
+		
+		$scope.participants = guestsFactory.participants;
+
+		
+
 
 		$scope.totalTables = 5;
 		$scope.getNumber= function(num){
@@ -80,9 +136,9 @@ angular.module('WeddingPenguin').controller('GuestsCtrl', [
 			});
 		}
 
-}])
+}
 
-.controller('GuestCtrl', [
+angular.module('WeddingPenguin').controller('GuestCtrl', [
 	'$scope',
 	'$stateParams',
 	'guestsFactory',
@@ -185,5 +241,7 @@ app.controller('ModalInstanceTableCtrl', [
 				});*/
 			}
 		}
+
+		$scope.testParam = guestTablesFactory.get('57c483b0068c8c2437ef69d2')
 
 }]);

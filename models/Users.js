@@ -1,17 +1,27 @@
 var mongoose = require('mongoose');
-var crypto = require('crypto');			//node default tool
+var crypto = require('crypto');			//for hashing password
 var jwt = require('jsonwebtoken');		//npm install jsonwebtoken --save
 
-var tableSchema = new mongoose.Schema({     
-  number: Number,
-  name: {type: String, default: ""},
-})  
+/*************** Sub Schema ****************/
+  var tableSchema = new mongoose.Schema({     
+    number: Number,
+    name: {type: String, default: ""},
+  })  
 
+  var guestSchema = new mongoose.Schema({
+    name: {type: String, required: true},
+    relation: {type: String, default: "unassigned"},
+    table: {type: Number, default: 0},
+  })
+
+
+/*************** Main Schema *****************/
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
   hash: String,
   salt: String,
   guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }],
+  participants: [guestSchema],
   checklists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Checklist' }],
   budget: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Budget' }],
   table: [tableSchema]

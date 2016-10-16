@@ -15,19 +15,28 @@
 		<% include guest_partials/_table_settings.ejs %><!--load modal for table-->
 
 	</div><!--end container-->
+	
+	<div class="guests-partials" ng-controller="GuestsCtrl">
 
-	<div class="page-header clear">
-		<h1>Guest View</h1>
-	</div>
-	
-	
-	<div class="left-bar col-sm-4">
-		<% include guest_partials/_add_guest_script.ejs %>
-	</div>
+		<div class="page-header clear">
+			<h1>Guest View</h1>
+		</div>
 		
 		
-	<div class="right-bar col-sm-8">
-		<% include guest_partials/_display_guests_script.ejs %>
+		<div class="left-bar col-sm-4">
+			<% include guest_partials/_add_guest_script.ejs %>
+		</div>
+			
+			
+		<div class="right-bar col-sm-8">
+			<% include guest_partials/_display_guests_script.ejs %>
+		</div>
+
+		<div>
+				<p> Participants test </p>
+				<p> {{participants}}</p>
+			
+		</div>
 	</div>
 
 </body>
